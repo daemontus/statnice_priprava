@@ -1,0 +1,78 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage[pdftex]{graphicx}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[slovak]{babel}
+\usepackage[utf8x]{inputenc}
+
+
+\DeclareTextFontCommand{\emph}{\bfseries}
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+\textsc{ }\\[2cm]
+\textsc{\LARGE Masaryková univerzita}\\[0.2cm]
+\textsc{\LARGE Fakulta informatiky}\\[0.5cm]
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+\includegraphics[width=0.3\textwidth]{./filogo}~\\[3cm]
+
+
+% Title
+{ \huge \bfseries Teoretické základy informatiky a matematika \\[0.4cm] }
+\textsc{\Large Vypracované otázky pre bakalárske SZZ}\\[0.5cm]
+
+\vspace*{\fill}
+
+
+
+% Bottom of the page
+{\large Jar 2015}
+
+\end{center}
+\end{titlepage}
+
+%\domsecttoc
+\tableofcontents
+\pagebreak
+
+\section{Množiny, relácie, zobrazenia, čísla.} 
+\textit{Základné množinové operácie, množinový kalkul, potenčná množina, kartézsky súčin. Relácie a ich vlastnosti - ekvivalencia a rozklady, usporiadanie a usporiadané množiny. Skladanie relácií, zobrazenia (injekcia, surjekcia, bijekcia). Elementárna teória čísiel (delitelnosť, Euklidov algoritmus, modulárne operácie).}
+	\subsection{Množiny}
+	Množina je súbor prvkov a je svojimi prvkami plne určená. Množina môže byť prvkom inej množiny. Množina nemusí mať konečný počet prvkov.
+	
+	Majme $ M = \{a, b\} = \{b, a\} = \{a, b, a\} $ a $ N = \{\{a\}, \{b, c, d, e\}\} $. Pre prvky množín $M$ a $N$ potom platí: $ a \in M $, $a \not\in N$, $\{a\} \in N$.
+	
+	Pokiaľ je množina prázdna (t.j. neobsahuje žiadne prvky - takúto množinu značíme $\emptyset$), potom platí $\emptyset \in \{\emptyset\}$ ale $\emptyset \not\in \emptyset$.
+	
+		\subsubsection{Základné pojmy}
+		\emph{Mohutnosť množiny} je určená počtom jej prvkov. Mohutnosť množiny $A$ zapisujeme ako $|A|$.
+		$$|\emptyset| = 0$$
+		$$|\{\emptyset\}| = 1$$
+		$$|\{a,b,c\}| = 3$$
+		$$|\{\{a, b\}, c\}| = 2$$
+	
+	Množina je $A$ \emph{podmnožinou} množiny $B$ práve vtedy, keď každý prvok $A$ je prvkom $B$. Píšeme $A \subseteq B$. Tento vzťah nazývame tiež \emph{inklúzia}\footnote{Pre ľubovolnú množinu $S$ je relácia inklúzie čiastočným usporiadaním na množine $2^{A}$ (viď.~\ref{usporiadanie} a~\ref{potencna_mnozina})}. Zároveň vtedy platí, že $B$ je \emph{nadmnožinou} množiny $A$ (píšeme $B \supseteq A$).
+	$$A \subseteq B \Leftrightarrow \forall x(x \in A \Rightarrow x \in B)$$
+	
+	Množiny si sú \emph{rovné} práve vtedy, keď $A \subseteq B$ a $B \subseteq A$.
+	$$A = B \Leftrightarrow A \subseteq B \land B \subseteq A$$
+	
+	Množina $A$ je \emph{vlastnou podmnožinou} množiny $B$ práve vtedy, keď $A$ je podmnožinou $B$ a $A \not= B$.
+	$$A \subset B \Leftrightarrow A \subseteq B \land \exists x \in B(x \not\in A)$$
+	\subsection{Základné množinové operácie}
+	Základnými množinovými operáciami nad množinami $A$ a $B$ sú:
+	\begin{itemize}
+		\item \emph{zjednotenie} - $A \cup B = \{x \mid x \in A \lor x \in B \}$
+		\item \emph{prienik} - $A \cap B = \{x \mid x \in A \land x \in B \}$
+		\item \emph{rozdiel} - $A \setminus B = \{x \mid x \in A \land x \not\in B \}$
+		\item \emph{symetrický rozdiel} - $A \bigtriangleup B = (A \setminus B) \cup (B \setminus A)$
+		\item \emph{doplnok} (komplement) - nech $A \subseteq M$. Doplnok množiny $A$ vzhľadom k množine $M$ je množina $\overline{A} = M \setminus A$ 
+	\end{itemize}
+	\subsection{Potenčná množina}\label{potencna_mnozina}
+	\subsection{Usporiadanie}\label{usporiadanie}
+\end{document}
