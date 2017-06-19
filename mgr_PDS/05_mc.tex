@@ -1,0 +1,114 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Metoda ověřování modelu (MC) pro konečně stavové systémy a lineární temporální logiku. Princip překladu formulí LTL na automaty nad nekonečnými slovy.  Základní symbolické a explicitní algoritmy pro MC a jejich teoretická složitost. }
+	
+	\section{LTL model checking}
+	
+	\begin{itemize}
+		\item TODO: Uplnost Hoareho logiky? Unknown?
+		
+		\item Nedeterminizmus typicky vzniká ako dôsledok paralelizmu.
+		
+		\item Formálny model systému: Kripkeho štruktúra — stavy $S$, prechodová relácia $T \subseteq S \times S$ (väčšinou sa predpokladá totálna, ak nie, opakujem deadlock stav), labelling $I \subseteq S \times \mathcal{P}(AP)$, iniciálny stav $s_0$. Prípadne môžem mať ešte prechody označené akciami — Kripkeho prechodový systém — (typicky jedna akcia je vykonávaná viacerými prechodmi, podľa toho v akom stave sú napr. ostatné procesy). 
+		
+		\item Buchi automaton — $\mathcal{B} = (\Sigma, S, s, \delta, F)$, $\Sigma$ je abeceda, $S$ sú stavy, $s$ je inicálny stav, $\delta \subseteq S \times \Sigma \times S$ je prechodová relácia a $F$ sú akceptujúce stavy. Beh akceptuje ak je niečo z $F$ nekonečne krát navštívené. 
+		
+		\item LTL formula je preložiteľná na Buchi automat. Kripkeho štruktúra je preložiteľná na Buchi automat (abeceda je powerset propozícií, akceptujem všetkými stavmi - všetky behy akceptujú).
+		
+		\item Synchronna kompozícia týchto dvoch automatov je triviálna, keďže jeden automat akceptuje všetkými stavmi, teda ako akceptujúce stavy mi stačí kartézsky súčin (inak by som musel riešiť preskakovanie z tieru do tieru aby som zabezpečil že sa budú opakovať stavy z oboch automatov)
+		
+		\item Teda $M \models \varphi \iff L(M) \subseteq L(\varphi) \iff L(M) \cap co-L(\varphi) = \emptyset \iff L(M) \cap L(\neg\varphi) = \emptyset \iff L(M \times \neg\varphi) = \emptyset$ ($\varphi$ a $M$ preťažujem, takže je to buď pôvodný systém/formula alebo už konkrétny Buchi automaton)
+		
+		\item Buchi reprezentuje neprázdny jazyk práve vtedy keď existuje dosiahnuteľný akceptujúci cyklus (laso).
+		
+		\item Algoritmus na hľadanie akceptujúceho cyklu: Nested DFS - zložitosť je lineárna k veľkosti systému, lebo keď sa vynorím z "nested" časti, určite nevedie žiadna nepreskúmaná hrana von, a teda tam nemôže byť cyklus do ktorého by som vedel vstúpiť z iného miesta.
+		
+		\item NestedDFS: Dve prehľadávania — Prvé vypočíta post–order akceptujúcich stavov z daného inicálneho stavu. Druhé potom kontroluje prítomnosť cyklu pre jednotlivé akceptujúce stavy, ale kvôli nested argumentu nemusí ísť do už preskúmaných častí grafu. — nepotrebujem MC, stačí reachabilita
+		
+		\item Terminálny Buchi automat - všetky akceptujúce cykly sú selfloopy - safety vlastnosti.
+		\item Slabý Buchi automat - všetky komponenty obsahujú buď len akceptujúce cykly, alebo len neakceptujúce (nemám zmiešané komponenty) - weak vlastnosti (typicky nejake $G(x \implies F y)$) — nepotrebujem NestedDFS, stačí DFS.
+		
+	\end{itemize}
+
+	\section{LTL to BA}
+	
+	\begin{itemize}
+		\item Formula v normálnom tvare — negácia na literáloch a všetko je prevedené na X, U a R.
+		\item Použije sa zobecnený automat — mám viacero množín pričom beh musí nekonečne krát prejsť každou z nich.
+		\item Preklad zobecneného automatu na štandardný: Zreplikujem stavový priestor pre každú množinu + jeden extra nultý tier. Do ďalšieho tieru môžem postúpiť vždy len cez akceptujúci stav (teda do tieru $k$ sa dostanem ak som v tiere $k-1$ a VSTUPUJEM do akceptujúceho stavu množiny $F_k$). Akceptujúce stavy sú všetky stavy posledného (alebo vlastne hociktorého) tieru. Teda pokiaľ mám nekonečný akceptujúci beh, tak to znamená že prejde akceptujúcim stavom každého z tierov.
+		
+		\item Konštrukcia grafu k formuli: Rekurízvne po štruktúre formule. Pre každý stav grafu si pamätám čo tam už mám $Now$, čo tam chcem $New$ a čo má platiť v ďalšom stave $Next$. Začínam s jedným stavom ktorý má v $New$ celú formulu a postupne ju rozbaľujem.
+		
+		\item Ak v $New$ propozíciu, pozriem sa či je splniteľná s aktuálnym $Now$, ak nie, mažem tento uzol, ak ano, pridávam následníka ako presnú kópiu, iba s pridanou propozíciou. Ak mám and, vytváram nového následníka v ktorom do $New$ dám obidve podformule, ak mám or, pridávama dvoch následníkov kde každý má v $New$ jednu podformulu. Ak mám until, vytvorím dvoch následníkov — jeden má v $New$ path formulu a v $Next$ má zase until a druhý má v $New$ reach formulu. Pre release mám jedného čo má "released" formulu v new a release v next a druhého čo má "released" aj "releaser" v new a v next nemá nič nové.
+		\item Vo všetkých následníkoch samozrejme platí expandovaná formula v $Now$. Plus pokiaľ už nie je čo expandovať, tak skontrolujem či som náhodou nevyrobil niečo čo už mám, a ak ano, tak len incoming hrany do duplicitného stavu presmerujem tam. Ak som skutočne vyrobil nový stav, tak ho pridám a vytvorím nový stav, ktorý bude mať v $New$ veci z môjho aktuálneho $Next$.
+	\end{itemize}
+	
+\end{document}
