@@ -1,0 +1,148 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Systémy reálného času. Měkké a tvrdé systémy. Plánování v systémech reálného času: plánování s periodickými úkoly, plánování založené na prioritách, přístup ke sdíleným zdrojům.}
+	
+	\section{Systémy reálneho času}
+	
+	\begin{itemize}
+		\item Systém: procesor (aktívny), zdroj (pasívny), job (jednotka práce), task (opakujúci sa job)
+		
+		\item Hard deadline: requires verification, Soft deadline: requires validation.
+		
+		\item Periodic (pravidelný, hard), Aperiodic (nepravidelný, soft), Sporadic (nepravidelný, hard)
+		
+		\item Job - execution time $e$, release time $r$, deadline (relative/absolute) $D/d$. Response time: completion - release $C - r$, preemptible?, dependance/precendence? 
+		
+		\item Schedule - dvojici job x čas priradí procesor a zdroje, scheduling sa deje len na racionálnych časoch.
+		
+		\item Ako riešiť závislosti: Podľa DAGu mením release/deadline tak aby release bol maximum z $r_i + e_i$ a môjho $r$ a deadline minimum z $d_i - e_i$ a môjho $d$.
+		
+	
+	\end{itemize}
+
+	\section{Plánovanie}
+	
+	\begin{itemize}
+		\item Obecne pre sadu jobov: Väčšinou stačí EDF, bez preemption alebo s resources už je to ale NP-hard
+		\item Clock:
+		
+		\begin{itemize}
+			\item Viem že tasky sa mi zopakujú každú hyperperiod, takže stačí naplánovať hyperperiod.
+			\item Buď môžem mať presný scheduler (ťažké - clock drift etc.)
+			\item Alebo môžem mať periodické frames. Pričom teda platí že veľkosť framu delí hyperperiod, každý job sa zmestí do framu a medzi release a deadline musí byť aspoň jeden frame aby som mohol kontrolovať deadline overruns $2f - gcd(p_i, f) \leq D_i$. 
+			\item Ak sú joby moc veľké, môžem ich umelo rezdeliť (preemptnúť na bezpečných miestach)
+			\item Aperiodic/Sporadic: Slack stealing - na koniec framu pridám a/s frontu. Vylepšenie: fronta ide na začiatok framu, ale potom to chce presné hodiny.
+		\end{itemize}
+	
+		\item utilization = $e/p$, total utilization = suma cez všetky tasky
+		\item density = $e/min(p,D)$, prípadne pre sporadic je to $e/(d - r)$.
+	
+		\item Fixed priority: 
+		
+		\begin{itemize}
+			\item Scheduling sa deje len na release/complete eventy.
+			\item Rate monotonic (menšia period = väčšia priorita), Deadline monotonic (menšia relative deadline = väčšia priorita)
+			\item Ak sú tásky simply periodic ($p_i > p_j \implies p_j \mid pi$), tak aj RM je optimálne (utilization 1).
+			\item Žiadny fixed priority algoritmus nie je lepší ako DM ak $D \leq p$ (Ak sa dá schedulenúť jedným algoritmom, určite sa dá aj cez DM).
+			\item Sada taskov je schedulable v DM ak má utilization at most $n \cdot (2^{1/n} - 1)$ - konverguje k $ln(2)$.
+			\item Time demand analysis: Počítam čas potrebný na vykonanie doteraz releasnutých jobov. Ak skutočný čas toto číslo nikdy neprekročí, mám problém.
+			\item Critical instant - job tasku ktorý má najväčší response time (ak phase = 0, tak sú to hneď prvé joby). Inak je to vtedy keď sú releasnuté všetky higher priority joby.
+			\item Test na schedulability: Time demand analysis v critical instant.
+		\end{itemize}
+	
+		\item Dynamic priority:
+		
+		\begin{itemize}
+			\item EDF / Least slack time
+			\item Sada taskov je schedulable v EDF ak má utilization at most 1.
+			\item Test na schedulability: Ak sú deadlines väčšie ako periódy, stačí testovať utilization, inak treba skontrolovať aj density (vtedy je to len necessary)
+		\end{itemize}
+	
+		\item Sporadic jobs:
+		
+		\begin{itemize}
+			\item Periodic server - normálny periodic task, ale má ešte aj budget ktorý môže minúť na sporadic/aperiodic tasks
+			\item Polling server - budget hneď zahadzuje ak nemá čo počítať
+			\item Deferrable server - budget si necháva, ale potom v najhoršom prípade môže zbrzdiť o 2x času.
+			\item Sporadic server - vždy keď prvý krát začnem pracovať, nastavím replenishment na teraz + perioda. Vylepšenie: Ak je neaktívny interval, toto nemusím robiť. Až skončí neaktívny interval, proste sa chovám ako keby nastal reštart vesmíru.
+			\item EDF: todo
+		\end{itemize}
+	
+		\item Resources:
+		
+		\begin{itemize}
+			\item Priority inversion: High priority job je blokovaný low priority jobom kvôli zdroju zatiaľ čo low priority je blokovaný medium priority.
+			\item Primitívne: Job v kritickej sekcií má najvyššiu prioritu. Super lebo najdlhší blocking time je jedna sekcia, blbé lebo všetci ma môžu blokovať, aj keď sa o nič nebijeme.
+			\item Priority-Inheritance - Ak job A drží resource ktorý chce iný job B s vyššou prioritou, job A dedí prioritu jobu B. Pekné: Nemôžu ma blokovať nesúvisiace joby. Blbé: Môžem byť blokovaný po dobu všetkých kritických sekcií v kolidujúcich joboch (Ale z každého len jednu).
+			\item Priority-Ceiling - Prioritný strop zdroja je maximálna priorita jobov ktoré ho môžu potrebovať. Prioritný strop systému je strop maximálneho locknutého zdroja. Job môže dostať resource len ak má väčšiu prioritu ako súčasný priority ceiling, alebo rovnú, ale v tom prípade musí držať zdroj ktorý má tento strop. Dôsledok: Mám striktné usporiadanie na zdrojoch, takže nemám deadlocky a môžem byť blokovaný maximálne po dobu jednej kritickej sekcie. (Efektívne hovorím že zamknutím zdroja zakazujem konfliktné zamykanie všetkým menším jobom).
+		\end{itemize}
+	\end{itemize}
+\end{document}

@@ -1,0 +1,154 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Matematická logika. Výroková a predikátová logika, syntaxe, sémantika. Odvozovací systémy, formální důkazy. Korektnost a úplnost odvozovacích systémů. Gödelovy věty o neúplnosti.}
+	
+	\section{Výroková a predikátová logika}
+	
+	\begin{itemize}
+		\item Sylogizmy, Booleova algebra
+		\item Matematická logika: Použitie formálnej logiky na vyjadrovanie sa o matematických štruktúrach.
+		\item Výroková logika:
+		
+		\begin{itemize}
+			\item Výroková funkcia $F_i : [0,1]^n \to [0,1]$, valuácia: $v : Var \to [1,0]$, Systém $\mathcal{L}(F_0, ..., F_n)$ - týpicky $F_i$ sú napr. $\land, \lor, \lnot, ...$.
+			\item Syntax: $\varphi = X \mid F_i(\varphi_1, ..., \varphi_m)$, sémantika je zjavná.
+			\item Formula je pravdivá/nepravdivá, splniteľná/nesplniteľná, tautológia, kontradikcia.
+			\item $\varphi$ je tautologický dôsledok súboru $T$, $T \models \varphi$, keď všetky valuácie spĺňajúce všetky $\psi \in T$ spĺňajú aj $\varphi$. Ak $T$ je prázdny, $\varphi$ je tautológia a $\models \varphi$.
+			\item Systém $\mathcal{L}$ je plnohodnotný ak pre ľubovoľnú výrokovú funkciu existuje ekvivalentná formula vygenerovateľná v $\mathcal{L}$.
+			\item Shefferovské spojky: Plnohodnotné sami o sebe (NAND, NOR).
+			\item Normálne tvary: CNF, DNF, literál, klauzula (disjunkcia), duálna klauzula (konjunkcia). 
+		\end{itemize}		
+	
+		\item Predikátová logika:
+		
+		\begin{itemize}
+			\item Premenné $x, y, ...$, jazyk $\mathcal{L}$: funkčné symboly $f_i$, predikátové symboly $P_i$.
+			\item Term: $t = x \mid f_i(t_1, ..., t_m)$, Formula: $\varphi = P_i(t_0, ..., t_1) \mid t_0 = t_1 \mid \varphi \to \varphi \mid \neg \varphi \mid \forall x. \varphi$ (Rovnosť je optional).
+			\item voľný/viazaný výskyt, substituovateľnosť (nesmiem vyrobiť viazaný výskyt z voľného), uzavretosť (bez voľných výskytov), univerzálny uzáver.
+			\item Realizácia $\mathcal{M}$ jazyka $\mathcal{L}$: Univerzum $M$, realizácia funkčných symbolov $f_i : M^m \to M$ (funkcia), realizácia predikátov: $P_i \subseteq M^m$ (relácia), ohodnotenie $e: Var \to M$. 
+			\item Formula je pravdivá ($\mathcal{M} \models \varphi$) ak je pravdivá pri všetkých ohodnoteniach ($\mathcal{M} \models \varphi[e]$).
+			\item Model formule je realizácia v ktorej je formula splnená.
+			\item Teória $T$ — množina prvorádových formulí (prvky sú axiomy teórie), $\mathcal{M} \models T$ — $\mathcal{M}$ je modelom $T$, teda všetky axiómy sú pravdivé v $\mathcal{M}$
+			\item Formula je sémantickým dôsledkom teórie ($T \models \varphi$) ak $\varphi$ je splnená vo všetkych modeloch teórie $T$.
+		\end{itemize}
+	\end{itemize}
+	
+	\section{Odvodzovacie systémy}
+	
+	\begin{itemize}
+		
+		\item Odvodzovacý systém: Sada axiómov a (syntaktických) odvodzovacích pravidiel.
+		
+		\item Dôkaz: Postupnosť formulí taká že každá fomula je buď axióm alebo vznikne aplikáciou pravidla na nejaké (v postupnosti) menšie formule. Na konci postupnosti je dokazované tvrdenie.				
+		
+		\item Dokázateľná z predpokladu/teórie $T$ — $T \vdash \varphi$, dokázateľná $\vdash \varphi$ (bez predpokladov/teórie).
+		
+		\item Korektnosť: Čo je dokázateľné, je pravdivé: $T \vdash \varphi \implies T \models \varphi$.
+		\item Úplnosť: Čo je pravdivé, je dokázateľné: $T \models \varphi \implies T \vdash \varphi$.
+		
+		\item Lukasiewicz: Odvodzovací systém pre výrokovú logiku:
+		
+		\begin{itemize}
+			\item A1: $A \to (B \to A)$
+			\item A2: $(A \to (B \to C)) \to ((A \to B) \to (A \to C))$
+			\item A3: $(\neg A \to \neg B) \to (B \to A)$
+			\item MP (modus ponens): Z $(A \to B)$ a $A$ odvoď $B$.
+		\end{itemize}
+	
+		\item Odvodzovací systém pre predikátovú logiky:
+		
+		\begin{itemize}
+			\item A1-3
+			\item A4 (špecifikácia): $\forall x. \varphi \to \varphi(x / t)$ (ak sa $x$ dá substituovať za $t$)
+			\item A5 (distribúcia): $(\forall x. (\varphi \to \psi) \to (\varphi \to \forall x. \psi))$ (ak $x$ nemá voľný výskyt v $\varphi$)
+			\item MP a GEN (generalizácia): Z $\varphi$ odvoď $\forall x. \varphi$.
+			\item Rovnosť (optional): R1: $x = x$, R2: $(x=y \land P(x)) \to P(y)$, R3: $x = y \to f(x) = f(y)$ (pre všetky arity)
+		\end{itemize}
+	
+		\item Teoria je sporná, ak je v nej dokázateľná ľubovoľná formula. 
+		
+		\item Veta o dedukcií (pre uzavreté a výrokové formule): Ak $T \vdash (\varphi \to \psi)$, potom $T \cup \{\varphi\} \vdash \psi$.
+	
+		\item Veta o kompaktnosť: Teória/súbor predpokladov $T$ je má model/ je splniteľný iff každá konečná podteória/podsúbor má model/je splniteľný.
+		
+		\item Lövenheim-Skolem: Ak pre ľubovoľné $n$ existuje model teórie s nosičom mohutnosti $n$, tak teória má aj model s nekonečným nosičom.		
+		
+	\end{itemize}
+
+	\section{Gödel}
+
+	\begin{itemize}
+		\item 1. veta: Existuje uzavretá formula ktorá je pravdivá v $\mathcal{N}$ ale nie je dokázateľná v $PA$.
+		\item 2. vera: V $PA$ (Alebo inej dosť silnej teórií) nie je dokázateľná formula $CONSIS$
+		\item Tu $PA$ je Peanova aritmetika, $\mathcal{N}$ jazyk aritmetiky a $CONSIS$ je formula, ktorá tvrdí že existuje nedokázateľná formula (a teda systém je bezsporný).
+	\end{itemize}
+
+\end{document}

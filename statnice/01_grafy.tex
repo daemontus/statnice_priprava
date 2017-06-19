@@ -1,0 +1,147 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Grafy a grafové algoritmy. Formalizace základních grafových pojmů, reprezentace grafů. Souvislost grafu, barevnost, rovinné grafy. Algoritmy (včetně složitosti a základní myšlenky důkazů korektnosti): prohledávání grafu do šířky a do hloubky, nejkratší vzdálenosti, kostry, toky v sítích.}
+	
+	\section{Základné grafové pojmy}
+	
+	\begin{itemize}
+		\item Neorientovaný graf: $G = (V, E)$ kde $E \subseteq \mathcal{P}(V)$ a $x \in E \implies |x| = 2$. 
+
+		\item Orientovaný graf: $G = (V, E)$ kde $E \subseteq V \times V$.
+
+		\item Kružnica $C_n$ ($n$ hrán, $n$ vrcholov), Cesta $P_n$ ($n$ hrán, $n+1$ vrcholov), Úplný graf $K_n$ ($(\frac{n}{2})$ hrán, $n$ vrcholov), Úplný bipartitný graf $K_{m,n}$ ($m + n$ vrcholov, $m \cdot n$ hrán).
+		
+		\item Stupeň vrchola $d_G(v) = | \{\{u,v\} \mid \{u,v\} \in E(G) \} |$.
+		
+		\item Izomorfizmus grafov $G$ a $H$ je zobrazenie $f: V(G) \to V(H)$ t.ž. $\{u,v\} \in E(G) \iff \{f(u), f(v)\} \in E(H)$. Píšeme $G \simeq H$.
+		
+		\item Nezávislá množina: $X \subseteq V(G)$ t.ž. pre žiadne $u, v \in X$ nie je $\{u,v\} \in E$. Vrcholové pokrytie: Množina vrcholov taká, že všetky hrany končia/začínajú v množine. Dominujúca množina: každý vrchol má aspoň jednoho súseda v množine.
+		
+		\item Komponenta súvislosti: $X \subseteq G(V)$ t.ž. pre všetky $u, v \in X$ je $\{u, v\} \in E*$ (tranzitívny uzáver). V orientovaných grafoch silná/slabá súvislosť.
+		
+		\item Graf je súvislý ak je tvorený práve jednou komponentou (všetci vedia ísť všade).  
+		
+		\item Reprezečntácia grafov: Matica susednosti, Incidenčná matica, Zoznam hrán, Implicitne.
+		
+		\item Ofarbenie grafu je funkcia $c(v) : V \to \mathbb{N}$ t.ž. $\{u,v\} \in E$ tak $c(u) \not= c(v)$.
+		
+		\item Farebnosť grafu $\chi(G)$ je najmenšie $k$ také, že exisuje $c$ t.ž. $c(v) \leq k$ pre všetky $v$.
+		
+		\item \emph{Erdös:} Pre ľubovoľné $c,r$ existuje graf s farebnosťou aspoň $c$ a najmenšou kružnicou väčšou ako $r$.
+		
+		\item NP-úplné problémy: 3-farebnosť, Nezávislá množina (veľkosti aspoň $k$), Vrcholové pokrytie (veľkosti najviac $k$), Dominujúca množina (veľkosti najviac $k$), Hamiltonovský cyklus/cesta.
+		
+		\item Rovinný graf je t.ž. sa dá nakresliť do roviny bez pretínajúcich sa hrán. Stenami takéhoto zakreslenia sú topologicky súvislé oblasti (oddelené hranami). Existuje lineárny algoritmus na určenie rovinnosti grafu.
+		
+		\item Duálny graf: Steny nahradíme vrcholmi. Hrany vytvoríme podľa dotýkajúcich sa stien.
+		
+		\item \emph{Euler:} Nech $G$ je planárny graf ktorý má $f$ stien. Potom $|V| + f - |E| = 2$.
+		
+		\item \emph{Kuratowski:} Graf je rovinný práve vtedy, keď neobsahuje podrozdelenie $K_5$ alebo $K_{3,3}$ ako podgrafy.
+		
+	\end{itemize}
+	
+	\section{Grafové Algoritmy}
+	
+	\begin{itemize}
+		
+		\item BFS/DFS: vrchol — init, navštívený, spracovaný (hrany sú vo fronte), hrana — init, spracovaná. Preorder, Postorder.
+		
+		\item Najkratšie cesty (O - one-to-one, M - many-to-many): 
+		
+		\begin{itemize}
+			\item (O) DAG a neohodnotený graf: BFS. Čas: $\mathcal{O}(V + E)$ Priestor: $\mathcal{O}(V + E)$.
+			
+			\item (O) Dijkstra: Zober najbližší nespracovaný a spracuj ho tak, že aktualizuješ vzdialenosť objavených vrcholov. Vždy si pamätaj odkiaľ sa naposledy znižovala vzdialenosť, aby si vedel zrekonštruovať cestu. Čas: $\mathcal{O}(E + V \cdot log(V))$ Priestor: $\mathcal{O}(V + E)$
+			
+			\item (M) Floyd-Warshall: V $k$-tej iterácií napočítam cesty ktoré používajú prvých $k$ vrcholov. Čas: $\mathcal{O}(V^3)$ Priestor: $\mathcal{O}(V^2)$
+		\end{itemize}
+	
+		\item Toky v sieťach:
+		
+		\begin{itemize}
+			\item Ford-Fulkerson: Vytvorím reziduálnu sieť a v nej hľadám zlepšujúcu cestu. 
+			\item Edmonds-Karp: V reziduálnom grafe hľadám najkratšiu zlepšujúcu cestu.
+			\item Ďalšie vylepšenia...
+		\end{itemize}
+	
+		\item Minimálne kostry:
+		
+		\begin{itemize}
+			\item Kostra: minimálny súvislý podgraf.
+			\item Hladový: Hrany od najmenšej po najväčšiu. Ak som vytvoril cyklus, nepridávam hranu (je najväčšia na cykle).
+			\item Jarník/Prim: Začnem z vrcholu a pridávam vždy najmenšiu border hranu.
+			\item Borůvka: Pridávam globálne najmenšiu hranu do nepokrytého vrchola.
+		\end{itemize}
+	
+		\item \textbf{TODO dokazy a zlozitost}
+	\end{itemize}
+\end{document}

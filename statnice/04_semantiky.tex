@@ -1,0 +1,166 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Operační, denotační, a axiomatická sémantika programovacích jazyků. CPO, věta o pevném bodě a její použití. Hoareova logika, její korektnost a úplnost. Temporální logiky  lineárního a větvícího se času a jejich fragmenty, sémantika neukončených a paralelních programů.}
+	
+	\section{Operačná, denotačná a axiomatická sémantika}
+	
+	\begin{itemize}
+		\item Program: Syntaktický strom — atomy (sú z nejakej domény, potenciálne s vlastným syntaktickým stromom), operácie (nulárne operácie = pomenované konštanty)
+		
+		\item Sémantika: Pre každý program definuje prechodový systém zodpovedajúci výpočtu programu.
+		
+		\item Uvažujeme tento jazyk:
+		
+		\begin{itemize}
+			\item Základné domény: $Var = \{A, B, ... \}$, $Bool = \{tt, ff \}$, $Num = \{0, 1, -1, 2, -2, ... \}$.
+			\item Aritmetické výrazy: $a ::= n \in Num \mid X \in Var \mid a_0 + a_1 \mid a_0 \cdot a_1 \mid a_0 - a_1$
+			\item Pravdivostné výrazy: $b ::= t \in Bool \mid a_0 = a_1 \mid a_0 \leq a_1 \mid \text{not } b_0 \mid b_0 \text{ and } b_1 \mid b_0 \text{ or } b_1$
+			\item Príklazy: $c ::= \text{skip} \mid c_0;c_1 \mid X \in Var := a \mid \text{if } b \text{ then } c_0 \text{ else } c_1 \mid \text{while } b \text{ do } c$
+		\end{itemize}
+	
+		\item "Big-step" štrukturálna operačná sémantika:
+		
+		\begin{itemize}
+			\item Stav/konfigurácia $\sigma : Var \to \mathbb{Z}$, množina všetkých konfigurácií je $\Sigma$.
+			\item Množina akcií sú príkazy, prechod zodpovedá vykonaniu príkazu.
+			\item Tri prechodové relácie: $\to_A, \to_B, \to_C$ — $C$ sa definuje pomocou $A$ a $B$.
+			\item Idea: Aritmetické výrazy sa vyhodnocujú na čísla, pravdivostné výrazy na tt/ff, príkazy sa vyhodnocujú na nový stav. Relácie sú definované ako odvodzovacie systémy.
+			\item Príklad: $a + b$ v stave $\sigma$ sa vyhodnotí na $n$ ak $a$ sa vyhodnotí na $n_1$, $b$ sa vyhodnotí na $n_2$ a $n_1 + n_2 = n$; $\text{while } b \text{ do } c$ v stave $\sigma$ sa vyhodnotí na $\sigma$ ak $b$ sa vyhodnotí na ff a na $\sigma'$ ak $b$ sa vyhodnotí na $tt$, $c$ sa vyhodnotí na $\sigma''$ a $\text{while } b \text{ do } c$ sa v $\sigma''$ vyhodnotí na $\sigma'$.
+			\item Pozor: Dôkazový strom môže byť nekonečný - vtedy prechod neexistuje.			
+		\end{itemize}
+	
+		\item "Small-step" štrukturálna operačná sémantika:
+		
+		\begin{itemize}
+			\item Stav/konfigurácia je $\sigma : Comm \times \Sigma$ (program a valuácia).
+			\item Množina akcií je prázdna (res. mám len jedno akciu $\tau$), prechod zodpovedá vykonaniu jednej inštrukcie v príkaze.
+			\item Idea: Výrazy sa vyhodnocujú postupne "z ľava do prava" — ak mám výraz plne došpecifikovaný, môžem ho vykonať, inak vykonávam vnorené výrazy. While sa rozbalí na if.
+			\item Príklad: Stav $(a + b, \sigma)$ sa vyhodnotí buď na číslo, ak $a$ a $b$ sú čísla, alebo na $(a' + b, \sigma)$ ak $(a, \sigma)$ sa vyhodnotí na $(a', \sigma)$ alebo na $(a + b', \sigma)$ (obdobne, len v prípade že $a$ už nejde viac vyhodnotiť). $(\text{while } b \text{ do } c, \sigma)$ sa vyhodnotí tak, že sa rozbalí na jeden if a tento if už sa potom rieši štandardne ($b$ sa dovyhodnotí a podľa hodnoty sa nahradí za jednu z vetiev).
+			\item Pozn.: skip je konečná (deadlock) konfigurácia. Vykonaním inštrukcie sa inštrukcia v programe "zamení" za skip. Zreťazenie skip-c viem zameniť za c a tak pokračovať vo výpočte.
+		\end{itemize}
+	
+		\item Denotačná sémantika:
+		
+		\begin{itemize}
+			\item Nieč "ako" ale "čo" program počíta.
+			\item Pre jednotlivé typy výrazov definujem funkciu ktorá vracia funkciu ktorá počíta daný výraz: $\mathcal{C}: Com \to (\Sigma \to \Sigma)$ (obdobne pre $\mathcal{A}$ a $\mathcal{B}$) - zapisujem $\mathcal{C}[c](\sigma)$.
+			\item Všetko je triviálne (proste počítam to čo počíta inštrukcia) až na while. $\mathcal{C}[while]$ je least fixed point od funkcie $\Gamma(\varphi) = \{(\sigma, \sigma) \mid \mathcal{B}[b](\sigma) = ff \} \cup \{ (\sigma, \sigma') \mid \mathcal{B}[b](\sigma) = tt \land \sigma' = (\varphi \circ \mathcal{C}[c])(\sigma) \}$. 
+			\item Complete Partial Order (CPO) - partial order v ktorom ľubovoľná dvojica prvkov má supremum. (každá nekonečná neklesajúca postupnosť má supremum).
+			\item $f$ je spojitá, ak je monotónna a zachováva supréma.
+			\item Pre monotónnu $f$ platí že množina jej fixed pointov je tiež CPO a že fixpoint $f(\emptyset)$ je least fixed point.
+		\end{itemize}
+	
+		\item Axiomatická sémantika:
+		
+		\begin{itemize}
+			\item Odvodzovací systém v ktorom $\{A\} c \{B\}$ práve vtedy keď pre všetky $\sigma \models A$ po vykonaní $c$ platí $\sigma' \models B$. (čiastočná korektnosť - pokiaľ program neskončí, $B$ môže byť ľubovoľné)
+			
+			\item Na výpočet "efektu" $c$ použijeme funkciu $\mathcal{C}$ z denotačnej sémantiky, ale dodefinujeme ju pre nekončiace programy na $\bot$.
+			
+			\item Tvrdenia o programoch (assertions) — artimetické výrazy rozšírené o špeciálne premenné $IntVar = \{i,j, ...\}$, logika prvého rádu s kvantifikáciou cez $IntVar$: $T, F, =, \leq, \land, \lor, \neg, \exists i : , \forall i : $.
+			
+			\item Interpretácia $I : IntVar \to \mathbb{Z}$. Všetky interpretácie $\mathcal{I}$. Sémantická funkcia rozšírených aritmetických výrazov $E : Aexp+ \to (\mathcal{I} \to (\Sigma \to \mathbb{Z}))$, s ňou už potom definujem sémantiku assertions prirodzene (v závislosti na $I$).
+			
+			\item $\sigma \models^I A c B \iff (\sigma \models^I A \implies \mathcal{C}[c](\sigma) \models B)$, $\models^I A c B \iff \forall \sigma : \sigma \models A c B$, $\models A c B \iff \forall I : \models^I A c B$ ($A c B$ je platné tvrdenie).
+
+			
+			\item Pozn.: Z praktického hľadiska sú $\Sigma$ a $\Sigma_\bot$ skoro ekvivaletné, keďže $\bot$ spĺňa všetko.
+			
+			\item Hoareho odvodzovacý systém:
+			
+			\begin{itemize}
+				\item Axiom: $A—skip—A$
+				\item Axiom: $A[X/a]—X := a—A$
+				\item Rule: Ak $A—c_0—C$ a $C—c_1—B$, tak $A—c_0;c_1—B$.
+				\item Rule: Ak $A \land b—c_0—B$ a $A \land \neg b—c_1—B$, tak $A—\text{if } b \text{ then } c_0 \text{ else } c_1—B$
+				\item Rule: Ak $A \land b—c—A$, tak $A—\text{while } b \text{ do } c—A \land \neg b$
+				\item Rule (dôsledok): Ak $\models (A \implies A')$, $\models (B \implies B')$ a $A'—c—B'$, tak aj $A—c—B$.
+			\end{itemize}
+		
+			\item Korektnosť: Ak $\vdash A—c—B$, tak aj $\models A—c—B$
+			\item Úplnosť: Ak $\models A—c—B$, tak $\vdash A—c—B$ (vyplýva z existencie weakest precondition)
+			
+			\item Weakest precondition $wp^I[c, B]$: Množina stavov z ktorých keď vykonám $c$, bude platiť $B$. Existuje assertion výraz taký že $A[c, B] = wp^I[c, B]$ pre všetky $I$.
+			
+		\end{itemize}
+	
+		\item Paralelné programy: Pridám operátor $||$ a rozšírim sémantiku — vzniká nedeterminizmus. No biggie.
+		\item Neukončené programy: Nekonečná postupnosť konfigurácií, nekonečný odvodzovacý strom, etc.
+		
+	\end{itemize}
+
+	\section{Temporálne logiky}
+	
+	\begin{itemize}
+		\item CTL, LTL 
+	\end{itemize}
+	
+\end{document}
