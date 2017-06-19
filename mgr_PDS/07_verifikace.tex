@@ -1,0 +1,124 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Specifické techniky pro verifikaci softwarových systémů, abstraktní interpretace, metody abstrakce a aproximace, redukce částečným uspořádáním, metody zjemňování abstrakcí (např. CEGAR – protipříkladem řízené zjemňování abstrakcí).}
+	
+	\section{Partial Order Reduction}
+	
+	\begin{itemize}
+		\item Idea: Z pohľadu $LTL_X$ sú slová s vynechaným opakovaním ekvivalentné. Chceme teda zakázať niektoré prechody tak, aby sme odobrali len ekvivalentné slová.
+		\item Defunujeme $ample(s) \subseteq enabled(s)$ tak, aby bol bezpečný.
+		\item Prechody sú buď viditeľné alebo neviditeľné, podľa toho či menia množinu platných propozícií, alebo nie.
+		\item Definujeme reláciu nezávislých prechodov a) Ak $a$ aj $b$ sú enabled a vykonám jedno z nich, to druhé je stále enabled. b) komutativita: $a(b(s)) = b(a(s))$.
+		\item Potebujeme aby $ample$ spĺňali tieto podmienky: 
+		
+		\begin{itemize}
+			\item Ample je prázdny vtedy a len vtedy keď enabled je prázdny
+			\item Na všetkých cestách z $s$ vykonávam len nezávislé prechody predtým ako vykonám ničo z ample. (Teda všetky cesty buď do nekonečna opakujú nezávislé prechody, alebo sa nakoniec objaví niečo z ample)
+			\item Ak $s$ nie je celý rozvitý, tak všetko čo je v ample je invisible (inak povedané nemôžem len tak zahadzovať viditeľné zmeny)
+			\item Vo výslednej štruktúre nemôže byť cyklus ktorý obsahuje povolený prechod ktorý nie je v žiadnom ample na cykle.
+		\end{itemize}
+	
+		\item Ako toto prakticky počítať? 0 a 2 sú v pohode - lokálny check, 3ka sa zjednoduší na "na každom cykle je jeden fully expanded stav", takže ak sa to generuje cez DFS, stačí expandovať stav ktorý objaví stack. 2ka je rovnako ťažká ako reachabilita, takže ju len aproximujeme.
+		
+		\item Uvažujeme jednoduchý systém s paralelnými procesmi, shared variables a message queues. Ako kandidáta budem brať vždy možné prechody jednoho procesu. 0,2,3 kontrolujem lokálne (res. podľa DFS stacku), necessary condition pre 1ku je a) Neexistuje závislý prechod v inom procese (závislý = používa rovnakú frontu alebo premennú) b) Neexistuje lokálny (závislý) prechod, ktorý by som mohol uschopniť vykonaním prechodov iných procesov. Teda v žiadnom inom procese nie je prechod ktorý by mohol uschopniť niečo na mojom program counteri čo teraz nie je uschopnené ($pre(current_i(s) \setminus T_i(s)) \cap T_j = \emptyset$).
+	\end{itemize}
+
+	\section{Abstraction}
+	
+	\begin{itemize}
+		\item Pridávam/Odoberám chovanie tak aby som dostal výrazne jednodušší model.
+		\item Partial order reduction, Cone of influence, Symmetry reduction, Equivalence reduction, etc.
+		\item Stav programu sa nahradí abstraktným stavom - dva možné prístupy: Abstraktné domény alebo predikátová abstrakcia. 
+		\item Abstraktné domény: Zjednoduším domény premenných - -/0/+, mod, etc.
+		\item Predikátová abstrakcia (presná): mám množinu predikátov, mapovanie stavov prebieha podľa platnosti predikátov. Problém: Nie každá množina stavov sa dá mapovať na jeden abstraktný stav — môže byť stále príliš komplikované.
+		\item May abstrakcia (over) — ak existuje prechod v pôvodnej štruktúre, existuje prechod aj medzi abstrahovanými stavmi, môžu ale existovať aj falošné prechody. 
+		\item Must abstrakcia (under) — ak existuje prechod v pôvodnej štruktúre, pre každý vzor abstraktného stavu existuje prechod do vzoru cieľového stavu. 
+		\item Kartézska abstrakcia: Okrem 1/0 povolím ešte na predikátoch aj * — pre tento stav neviem. Pre ľubovoľnú množinu stavov potom viem zostrojiť abstraktný stav (čo najšpecifickejší).
+		
+		\item Príklad: Guarded command language - mám assignment $u$ a guard $g$. Najskôr kontrolujem či náhodou nie je plnené $[b, \Phi] \implies \neg g$, v tom prípade žiadne prechody nemám. Inak v stave $b$ môžem urobiť prechod do $b_i = 1$ ak viem dokázať, že $[b, \Phi] \implies (g \implies \varphi_i[x/u(x)])$ - inak povedané, ak som v stave $b$ a splním guard, tak sa predikát stane platným po vykonaní assignmentu. Obodbne s $b_i = 0$ a $\neg \varphi_i$. Ak nič z toho neviem dokázať, musím ísť do $*$.
+		
+		\item Zjemňovanie abstrakcie - CEGAR - dostanem protipríklad. To je buď končený beh — V tom prípade ho proste potrebujem odsimulovať. Ak zistím že nemôžem pokračovať, musím zjemniť abstrakciu, teda pridať predikát ktorý rozlýši to čo som dosiahol od toho čo som nedosiahol. Ak je protipríklad laso, robím v podstate to isté, ale musím unrollovať aby som si bol istý. Unrollovať musím aspoň toľko krát, koľko je najmenšia mohutnosť stavu na lase (ak ten stav navštívim x-krát, muselo sa mi niečo zopakovať, lebo tam proste nie je viac stavov).
+		
+		\item Hľadanie najhrubšieho zjemnenia je NP-hard.
+	\end{itemize}
+
+	\section{Abstraktná interpretácia}
+	
+	\begin{itemize}
+		\item POZOR NA COMPLETE LATTICE vs. COMPLETE PARTIAL ORDER!!!
+		\item Statická analýza - zaujíma ma ktoré stavy odpovedajú miestam v programe, nezaujíma ma celý beh.
+		\item Vety o pevnom bode pre complete lattice (Tarski - v complete lattice sú fixpointy zase complete lattice. Kleene - v complete lattice s final height je least fixed point vypočítaný ako $f(\emptyset)$ — pozn. complete lattice s final height je directed CPO, preto môžem použiť Kleeneho)
+		
+		\item Pre každú inštrukciu určím monotónnu funkciu v závislosti na tom, čo chcem počítať a spočítam fixed point.
+		\item Ak to trvá príliš dlho, môžem použiť widening/narrowing (preskakujem rýchlejšie, res. si zmením trochu doménu aby som mohol dokonvergovať za cenu toho, že môžem prestreliť).
+	\end{itemize}
+	
+\end{document}

@@ -109,6 +109,23 @@
 		
 		\item Ak v $New$ propozíciu, pozriem sa či je splniteľná s aktuálnym $Now$, ak nie, mažem tento uzol, ak ano, pridávam následníka ako presnú kópiu, iba s pridanou propozíciou. Ak mám and, vytváram nového následníka v ktorom do $New$ dám obidve podformule, ak mám or, pridávama dvoch následníkov kde každý má v $New$ jednu podformulu. Ak mám until, vytvorím dvoch následníkov — jeden má v $New$ path formulu a v $Next$ má zase until a druhý má v $New$ reach formulu. Pre release mám jedného čo má "released" formulu v new a release v next a druhého čo má "released" aj "releaser" v new a v next nemá nič nové.
 		\item Vo všetkých následníkoch samozrejme platí expandovaná formula v $Now$. Plus pokiaľ už nie je čo expandovať, tak skontrolujem či som náhodou nevyrobil niečo čo už mám, a ak ano, tak len incoming hrany do duplicitného stavu presmerujem tam. Ak som skutočne vyrobil nový stav, tak ho pridám a vytvorím nový stav, ktorý bude mať v $New$ veci z môjho aktuálneho $Next$.
+		
+		\item Automat potom z tohoto urobím tak, že na prechody dám atomické propozície ktoré platia v stave do ktorého vstupujem a pre každý until vytvorím akceptujúcu množinu stavov ako tie, kde platí reach formula alebo tie, kde práve neplatí until.
+	\end{itemize}
+
+	\section{Symbolický model checking}
+	
+	\begin{itemize}
+		\item Stav = bitvektor = booleovská funkcia
+		\item Booleovskú funkciu môžem kódovať ako Binary Decision Tree, res. Binary Decision Diagram.
+		\item Tvroba BDD z BDT: Odstráň unreachable vrcholy, odstráň duplicitné listy (ak boolean, tak zostane len 1/0), iteratívne odstraňuj a) zbytočné uzly ktoré vedú na high/low do toho istého vrchola b) duplicitné úzly ktoré pre rovnakú premennú kódujú rovnaké high/low.
+		\item Minimálne BDD je určené jednoznačne za predpokladu usporiadania premenných — Ordered BDD (OBDD).
+		\item Minimalizácia je lineárna pre fixné usporiadanie. 
+		\item Aplikácia logických operácií na OBDD: Shannonova expanzia $F = (\neg x \land F_{x=0}) \lor (x \land F_{x=1})$ ($F_{x=y}$ je restrikcia - jednoduché - proste prepojím odpovedajúce linky). Takže nové BDD počítam rekurízvne pričom a) ak dostanem listy, tak len aplikujem operáciu b) Ak dostanem premenné na rovnakom leveli, tak nové low je rekurízvne apply na obidve staré low, rovnako high c) Ak dostanem jednu premennú väčšiu (hlbšie), tak toto BDD si nechávam a beriem low/high len z toho menšieho, aby som sa posunul bližšie k rovnosti
+		\item Kódovanie stavovej množiny je priamočiare, na kódovanie prechodovej funkcie potrebujem 2x toľko premenných (v zásade chcem napísať niečo ako "Ak mam prechod z a do b, tak funkcia je pravdivá pre a a b' — kódujem reláciu, takže je to vlastne zase len množina).
+		\item Výpočet jednoho kroku: Spočítaj konjunkciu množina + prechodová relácia a bezpečne odstráň prvú časť výsledku (pridám extra uzly tak aby som vždy prechádzal prvým prvkom druhej časti, zmažem prvú časť a urobím dizjunkciu vzniknutých BDDčiek).
+		
+		\item Iný prístup: SMT a bounded model checking - väčšinou len safety vlastnosti, dá sa ale rozšíriť aj na časť LTL - nie vždy sa ale dá rozhodnúť ($GF a$). Celý problém kódujem do jednej veľkej formule ktorá popisuje všetky prexify dĺžky $k$ a negáciu formule. Ak je formula splniteľná, mám protipríklad dĺžky $k$, ak nie, nemám nič. Ideálne by som chcel vedieť polomer grafu, aby som vedel maximálne $k$. To je ale ťažké spočítať.
 	\end{itemize}
 	
 \end{document}
