@@ -1,0 +1,105 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Konečné automaty (FA) a logiky nad slovy. Logika 1.řádu (FOL) a monadická logika 2.řádu (MSOL): syntax a sémantika FOL a MSOL, principy převoditelnosti mezi FA a formulemi MSOL. Automaty nad nekonečnými slovy a omega-regulární jazyky.}
+	
+	\section{FOL a MSOL nad slovami}
+	
+	\begin{itemize}
+		\item First order logic: Štandardná FOL kde kvantifikujem cez pozície v slove a mám k dispozícií predikáty $x < y$ a $Q_a(x)$ - teda pozícia $x$ je pred pozíciou $y$ a na pozícií x sa nachádza znak $a$.
+		\item Pokiaľ má formula voľné premenné, potrebujem ešte k tomu interpretáciu.
+		\item Pozn.: Použitím $\exists$ vynucujem že slovo je neprázdne.
+		\item Môžem si dodefinovať predikáty ako first/last (neexsituje $y$ menší/väčší ako $x$), prípadne next pozíciu (neexsituje $z$ väčšie ako $x$ a menšie ako $y$).
+		\item FOL nemá ani vyjadrovaciu silu regulárnych jazykov (jazyk slov párnej dĺžky nie je vyjadriteľný). 
+		\item Monadic second order logic: Rozšírime FOL o kvantifikáciu nad množinami pozícií a predikát $x \in X$.
+		\item Teraz môžem vyjadriť napr. predikát Even (x je v množine iff je druhé alebo existuje pozícia v množine ktorá je o dve predomnou) a jazyk párne dlhých slov (existuje množina pozícií ktoré sú párne a posledná pozícia slova je v tejto množine).
+		
+		\item MSOL je ekvivalentná regulárnym jazykom. Dôkaz prekladom:
+		
+		\begin{itemize}
+			\item FA $(\Sigma, Q, \delta, q_0, F)$ to MSOL (okrem prázdneho slova, to sa musí pridať do formule ešte explicitne):
+			\item 1) Pozície $i$ v slove sú rozdelené do $n$ množín ($n$ je počet stavov), podľa toho, či sa automat nachádza v danom stave po prečítaní prvých $i$ znakov nejakého slova. Pozn.: Tu už uvažujeme "pre fixné slovo", keďže to je to o čom sa formula vyjadruje.
+			\item 2) Skonštruujeme predikát $visits(X_0....X_n)$ ktorý toto vyjadruje. Konkrétne chceme povedať že: a) Existuje $x$ t.ž. $x$ je prvá pozícia a ak $Q_a(x)$ a súčasne $q_i \in (q_0, a)$, potom $x \in X_i$ (inicializácia). b) Množiny pozícií sú dizjunktné a každá pozícia patrí do nejakej množiny c) Pozície zachovávajú prechodovú funkciu, teda ak mám $q_i \in (q_j, a)$, mám $x \in X_j$ a $Q_a(x)$, tak $y = x + 1$ patrí do $X_i$.
+			\item 3) S takýmto predikátom potom môžem povedať že existujú tieto množiny a súčasne posledná pozícia leží v množine odpovedajúcej akceptujúcemu stavu.
+			
+			\item MSOL to FA:
+			\item Abeceda automatu je pôvodná abeceda, plus jeden bit pre každú voľnú premennú formule, ktorý vyjadruje či zrovna som, alebo nie som na tejto pozícií (res. na pozícií v tejto množine). Automat potom budujem induktívne:
+			\item Pre $Q_a(x)$ — mám jednu voľnú premennú, dva stavy medzi kyotými sa môžem presunúť pod $[a, 1]$, inak cyklím.
+			\item $x < y$ - mám dve premenné a tri stavy nad ktorými cyklím. Prvý presun robím pri $[?, 1, 0]$, druhý pri $[?, 0, 1]$ ($?$ znamená že mi je jedno aké písmeno čítam).
+			\item $x \in X$ - mám dve premenné a dva stavy, presúvam sa pod $[?, 1, 1]$.
+			\item $\varphi = \not \psi$ — nemôžem urobiť hlúpy komplement, lebo by som mohol akceptovať slová ktoré nie sú platnými kódmi (napr. premenná $x$ by mohla mať viac hodnôť). Môžem ale urobiť komplement a sprienikovať to s automatom pre povolené slová (ktorý viem vyrobiť ak viem aká je štruktúra mojich premenných).
+			\item $\varphi = \varphi \lor \varphi$ — musím vhodne rozšíriť abecedy oboch automatov, aby obsahovali rovnaké premenné (tj. pridávam nové pozície, pričom ak mám na prechode $[a, 0]$ tak zamením za $[a, 0, 1]$ aj $[a, 0, 0]$). Potom môžem urobiť obyčajné zjednotenie.
+			\item $\varphi = \exists x$ (alebo $X$, je to jedno) — odstránim danú pozíciu zo symbolov (fakt, nič viac).
+			\item Veľkosť výsledného automatu môže byť až v ráde "veži exponentov" pričom výška veže je úmerná počtu negácií.
+		\end{itemize}
+	
+	\end{itemize}
+
+\end{document}
