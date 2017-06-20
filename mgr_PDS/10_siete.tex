@@ -1,0 +1,94 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Počítačové sítě - základní pojmy, principy, architektury. Spojované a nespojované sítě, OSI model, protokoly v prostředí Internetu. Směrování, základní služby počítačových sítí, správa a bezpečnost sítí.}
+	
+	\begin{itemize}
+		\item Spojované vs. nespojované — spojované majú jeden fixný okruh na komunikáciu medzi dvoma zriadeniami, zatiaľ čo nespojované proste posielajú pakety kade sa dá. Spojované sú spoľahlivejšie, dá sa na nich robiť quality assurence, ale sú oveľa menej flexibilné.
+		
+		\item ISO/OSI model:
+		
+		\begin{itemize}
+			\item TCP/IP má spojenú Physical a DataLink vrstvy do Network Access Layer.
+			\item Physical layer — transformule 1/0 na signál (modulácia, demodulácia, rôzne média...) — Bit-to-signal transformation, bit-rate control, bit synchronization, multiplexing, circuit switching
+			\item DataLink layer (základ LAN) — packety na framy — Framing, Addressing (MAC adresy - distributed spanning tree algoritmu na výpočet topológie siete), Error control, Flow control (congestion), Medium Access Control (vo wireless sieti)
+			\item Network layer — segmenty na pakety — Internetworking (WAN), Packetizing, Fragmenting, Addressing (ARP, IPv4 (32bit), IPv6 (128bit), unicast, multicast, broadcast, anycast), Routing (DistanceVector - distribuovaný bellman-ford, LinkState - zozbieraj info o vsetkych a pouzi dijkstru, autonomne systemy = veľké podsiete, border gateway protokol, politiky), Multicast (source - zo zdroja po strome, core - meeting pointy v sieti)
+			\item Transport layer — end-to-end — Packetizing (transport hlavička), Connection control (session), Addressing (porty), Reliability, Congestion/Flow control and QoS — connection less vs. connection aware services (TCP/UDP), 
+			\item Session layer (not in TCP/IP) — self explenatory
+			\item Presentation layer (not in TCP/IP) — transformácia dat na spoločný formát
+			\item Application layer — client/server, peer-to-peer, protokoly, etc.
+		\end{itemize}
+	
+		\item IPv6: dovoľuje extension headers, prvých 64bitov je globálna adresa, potom lokálna, return routability (home agent), authentication header (bez encryption), encapsulating security payload, QoS cez traffic class a flow lables (identifikuje jeden stream) 
+		
+		\item TODO: Routing algoritmy...
+	\end{itemize}
+	
+\end{document}

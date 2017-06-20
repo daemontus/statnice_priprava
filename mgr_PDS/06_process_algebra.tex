@@ -1,0 +1,119 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+	
+	\textbf{Formalismy pro modelování nekonečně stavových systémů (Petriho sítě, procesové přepisovací systémy, automaty, procesové kalkuly) a algebry procesů, porovnání jejich vyjadřovací síly vzhledem k bisimulaci. Vybrané rozhodnutelné problémy z oblasti verifikace těchto systémů. }
+	
+	\section{Process Rewrite Systems}
+	
+	\begin{itemize}
+		\item Bavime sa o labeled transition systemoch...
+		\item Slabá ekvivalencia: Trace equivalence.
+		\item Silná ekvivalencia: Bisimulácia. Relácia $R$ je bisimulácia pokiaľ $(s, t) \in R$ a $(s, a, s') \in \Delta$, tak existuje $t'$ t.ž. $(t, a, s') \in \Delta$ a $(s', t') \in R$ a to isté opačným smerom. Chceme maximálnu bisimuláciu.
+		
+		\item Process Rewrite Systems: Množina akcií $a,b,c ...$, množina procesových konštant $X, Y, Z, ...$ Term — $t ::= \epsilon \mid X \mid t_1 \cdot t_2 \mid t_1 || t_2$ a množina transformácií (term, action, term).
+		
+		\item Syntaktická ekvivalencia na PRS: Axiómy: Nezáleží na uzávorkovaní sekvešnej ani paralelnej kompozície (len kombinácia je problém). Môžem ľubovoľne zamieňať poradie paralelných termov. Môžem pridávať/odoberať $\epsilon$ kam len chcem. Odvodzovacie pravidlá: môžem transformovať prvý term v sekvenčnej/paralelnej kompozícií.
+		
+		\item LTS potom z tohto vznikne tak, že stavy sú všetky možné termy a prechody pridávam podľa možných transformácií (s tým že môžem používať syntaktickú ekvivalenciu, takže v paralelnom procese môžem aplikovať na ľubovoľný, ale v sekvenčnom len na prvý proces).
+		
+		\item Hierarchia termov:
+		
+		\begin{itemize}
+			\item \textbf{1} Obsahuje len konštanty
+			\item \textbf{S} Obsahuje len sekvenčnú kompozíciu a konštanty.
+			\item \textbf{P} Obsahuje len paralelnú kompozíciu a konštanty.
+			\item \textbf{G} Obsahuje hocičo.
+		\end{itemize}
+	
+		\item Hierarchia procesov (dve obmedzenia — čo môže byť na ľavej a na pravej strane pravidla (plus nemá význam mať viac general veci na ľavo)):
+		
+		\begin{itemize}
+			\item (1,1) sú presne končené automaty, regulárne jazyky a spol.
+			\item (1,P) sú BPP — Basic Parallel Processes
+			\item (1, S) sú BPA — Basic Process Algebra
+			\item (1, G) je Process Algebra
+			\item (P, P) sú Petriho siete
+			\item (S, S) sú Pushdown automaty
+			\item (S,G), (P,G) a (G,G) nemajú meno.						
+		\end{itemize}
+		
+		\item Hierarchia je striktná vzhľadom na bisimuláciu.
+		
+	\end{itemize}
+
+	\section{Verifikačné problémy}
+
+	\begin{itemize}
+		\item Reachability pre Petri Nets je rozhodnuteľná. 
+		\item LTL pre Pushdown je rozhodnuteľné (repeating heads).
+		\item Equivalence checking je rozhodnuteľný pre (1,1), (1, P), (1, S) a (S, S).
+		\item TODO?
+	\end{itemize}
+\end{document}
