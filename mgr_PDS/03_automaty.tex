@@ -102,4 +102,21 @@
 	
 	\end{itemize}
 
+	\section{Omega automaty}
+	
+	\begin{itemize}
+		\item Labelled Transition System: $(S, \Sigma, \Delta, S_{in})$ — stavy, abeceda, prechodová relácia, inicálne stavy.
+		\item By default, všetko je nedeterministické!
+		\item Buchi automaton: $(\Sigma, Q, \delta, s_0, F)$ - akceptuje ak existuje beh, ktorý navštívi $F$ nekonečne krát.
+		\item Uzavretosť Buchi: Zjednotenie (trivialne ak dovolim viac inicialnych stavov, inak pridam novy init), Prienik (tiered konštrukcia), Regulárny.Buchi (proste zreťazím), Regulárny$^\omega$ (z akceptujúcych stavov sa zacyklím do iniciálneho)
+		\item $\omega$-regulárne jazyky sú tvaru $A.B^\omega$ kde $A$ a $B$ sú regulárne jazyky a sú rozpoznávané práve Buchiho automatmi.
+		\item Neprázdnosť omega jazyka je rozhodnuteľná (NLOG úplná ako reachabilita). Neuniverzalita je PSPACE.
+		\item Buchi su uzavrete aj na komplement, ale dokaz je TODO.
+		\item Zobecnený Buchi - prienik automatov s rovnakými stavmi a prechodmi, len inými accept množinami.
+		
+		\item Muller — podmienka: množiny stavov, slovo akceptuje ak inf je presne jedna z množín. Je silou ekvivalentná s Buchi, ale na vyjadrenie všetkých jazykov mi stačia deterministické automaty.
+		\item Rabin — podmienka: mám dvojice množín stavov, slovo akceptuje ak inf má prienik s prvou množinou a nemá prienik s druhou. Tiež sú ekvivalentné s Buchi.
+		\item Street — podmienka: tiež dvojice množín, slovo akceptuje ak inf má prienik s prvou, tak má prienik aj s druhou.
+	\end{itemize}
+
 \end{document}
