@@ -1,0 +1,230 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[utf8]{inputenc} 
+\usepackage[czech]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{paracol}
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{Masarykova Univerzita, Fakulta Informatiky} \\ [25pt] % Your university, school and/or department name(s)
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge Sada 2 \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Samuel Pastva (410286)} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\begin{itemize}
+	
+	\section{Obecné pojmy}
+	
+	\subsection{Grafy}
+	
+	\item Neorientovaný graf $(V, E)$ kde $e \in E$ sú dvojprvkové podmnožiny $V$ (neusporiadné).
+	
+	\item Orientovaný graf $(V, E)$ kde $E \subseteq V \times V$.
+	
+	\item Izomorfixmus grafov $G \simeq H$: $f: V(G) \to V(H)$ t.ž. $(u,v) \in E(G)$ iff $(f(u), f(v)) \in E(H)$.
+	
+	\item Planárny (rovinný) graf: Dá sa nakresliť do roviny bez pretínania hrán.
+	
+	\item (Silno) súvislá komponenta — zo všetký vrcholov viem dosiahnuť všetky vrcholy.
+	
+	\subsection{Výroková logika}		
+	
+	\item Booleovská funkcia $F : [0,1]^n \to [0,1]$. Operátory $\land, \lor, \neg, \implies, ...$ sú funkcie. 
+	
+	\item Formula v systéme $\mathcal{L}(F_0, ..., F_n)$: $\varphi ::= x \in Var \mid F_i(\varphi_0, ..., \varphi_m)$
+	
+	\item Modelom formule je valuácia literálov $v : Var \to [0,1]$: $v \models \varphi$
+	
+	\item Pravdivá/nepravdivá $v \models \varphi$, splniteľná $\exists v : v \models \varphi$, tautológia $\forall v : v \models \varphi$ ($\models \varphi$)
+
+	\item $\varphi$ je tautologický dôsledok: $T \models \varphi$ (bez ohľadu na model)
+	
+	\item Normálny tvar: CNF/DNF (klauzula, duálna klauzula, literál)
+
+	\subsection{Logika prvého rádu}
+	
+	\item Premenné $Var : x, ...$, funkčné symboly $F : f_0, ...$, predikátové symboly $\mathcal{P} : P_0, ...$
+	
+	\item Jazyk: Sada funkčných a predikátových symbolov 
+	
+	\item Realizácia $\mathcal{M}$: Univerzum $M$, relácie $P_i \subseteq M^{m}$, funkcie $f_i : M^{m} \to M$
+	
+	\item \textbf{S rovnosťou vs. bez rovnosti}
+	
+	\item Term: $t ::= x \in Var \mid f_i(t_0, ..., t_m)$
+	
+	\item Formula $\varphi ::= P_i(t_0, ..., t_m) \mid (t_0 = t_1) \mid \varphi_0 \to \varphi_1 \mid \neg \varphi_0 \mid \exists x : \varphi$
+	
+	\item Modelom formule je realizácia a valuácia $v : Var \to M$: $(\mathcal{M}, v) \models \varphi$
+	
+	\item Pravdivá $\mathcal{M} \models \varphi$ (bez ohľadu na valuáciu)
+	
+	\item $\varphi$ je sémantický dôsledok: $T \models \varphi$ (bez ohľadu na model)
+	
+	\item Teória $T$ je množina axiómov. Teória má model $\mathcal{M}$ ak sú v nej všetky axiómy $T$ pravdivé.
+
+	\subsection{Odvodzovacie systémy}
+	
+	\item Sada (generických) axiómov a syntaktických odvodzovacích pravidiel.
+	
+	\item Dôkaz: Postupnosť $\varphi_0, \varphi_1, ...$ kde $\varphi_i$ je axióm, alebo $\varphi_i$ vznikne pravidlom z $\varphi_j : j < i$.
+	
+	\item Dokázateľná formula: $\vdash \varphi$, Dokázateľná z predpokladu: $T \vdash \varphi$
+	
+	\item Korektnosť: Dokázateľné je pravdivé ($\vdash \varphi \implies \models \varphi$)
+	
+	\item Úplnosť: Pravdivé je dokázateľné ($\models \varphi \implies \vdash \varphi$)
+	
+	\item Sporná = všetky formule sú dokázateľné.
+	
+	\subsection{LTS a Kripkeho štruktúra}
+	
+	\item $LTS = (S, A, \Delta)$ — stavy, akcie a prechody $\Delta \subseteq S \times A \times S$
+	
+	\item $K = (S, T, s_0, L)$ — kde $T \subseteq S \times S$, inicálny stav $s_0$ a proposition labelling $L: S \to 2^{AP}$. Väčšinou chcem $T$ totálnu.
+	
+	\item Prechodový systém — $T$ je množina prechodov kde prechod je deterministická funkcia ($T \subseteq \mathcal{P}(S \to S)$). Interpretujem ako že mám pomenované prechody.
+	
+	\subsection{Trace ekvivalencia a bisimulácia}
+	
+	\item Trace: jeden beh v LTS
+	
+	\item Trace ekvivalencia = množiny behov systémov sú rovnaké.
+	
+	\item Relácia $R$ je bisimulácia ak spĺňa, že ak $(s,t) \in R$ a $(s, a, s') \in \Delta_0$, tak musí existovať $(t, a, t') \in \Delta_1$ t.ž $(s', t') \in R$ a to isté opačne.
+	
+	\item Dva stavy sú bisimulačne ekvivalentné ak existuje nejaké bisimulácia v ktorej sú v relácií. 
+	
+	\item Relácia bisimilarity $\sim$ je najväčšia ekvivalencia ktorá je súčasne bisimulácia.
+	
+	\item Pozn.: Môžem mať situáciu kedy $p$ simuluje $q$ a $q$ simuluje $p$, ale rôznymi reláciami a teda neviem zostrojiť jednu bisimuláciu ktorá ich zjednotí (Príklad: jeden proces sa rozhodne neskôr a druhý sa rozhodne buď hneď alebo neskôr.)
+	
+	\subsection{Omega automaty}
+	
+	\item Omega regulárne jazyky sú tvaru $U.V^\omega$ kde $U$ a $V$ sú regulárne jazyky.
+	
+	\item Buchi automat $(Q, \Sigma, \delta, s_0, F)$ — stavy, abeceda, prechodová relácia (nedeterministická), inicálny stav, akceptujúce stavy.
+	
+	\item Automat akceptuje ak sa v slove nachádza stav z $F$ nekonečne často.
+	
+	\item Zobecnený Buchiho automat: Miesto $F$ mám množinu množín stavov a akceptujem ak prejdem každou z nich nekonečne často.
+	
+	\subsection{CPO a Fixed point}
+	
+	\item Complete lattice (úplný svaz): Každá podmnožina má suprémum aj infimum.
+	
+	\item Complete partial order (CPO): Každá nekonečná postupnosť $a_0 \sqsubseteq a_1 \sqsubseteq ...$ má v množine súprémum.
+	
+	\item Directed complete partial order (DCPO): Každá directed množina má suprémum. Directed množina je taká že po dvoch tam majú prvky upper bound.
+	
+	\item Pozn.: každý complete lattice je aj CPO, každý konečný complete lattice je aj DCPO.
+	
+	\item Veta o pevnom bode (Knaster-Tarski): Pre complete lattice $(L, \leq)$ a monotónnu funkciu $f: L \to L$ platí, že aj fixed pointy $f$ tvoria complete lattice.
+	
+	\item Veta o pevnom bode (Kleene): Pre DCPO $(L, \leq)$ a Scott-spojitú (monotónnu) funkciu $f: L \to L$ existuje najmenší pevný bod ktorý a je suprémom postupnosti $f^n(\bot)$. (Zjednodušenie je pre konečný complete lattice a monotónnu funkciu)
+	
+	\subsection{LTL}
+	
+	\item $\varphi ::= true \mid p \mid \neg \varphi \mid \varphi \lor \varphi \mid X\ \varphi \mid \varphi\ U\ \psi$
+	
+	\item Iné operátory: $F\varphi = true\ U \varphi$, $G = \neg F \neg \varphi$, $\varphi\ R\ \psi = \neg (\neg \varphi\ U\ \neg \psi)$ a $\varphi\ W\ \psi = (\varphi\ U\ \psi) \lor G \varphi$
+	
+	\item Formula ktorú nevyjadrím v CTL: $F(G(\phi))$
+	
+	\subsection{CTL}
+	
+	\item $\varphi ::= true \mid p \mid \neg \varphi \mid \varphi \lor \varphi \mid AX\ \varphi \mid E/A [\varphi\ U\ \psi]$
+	
+	\item Iné operátory: $EX \varphi = \neg AX \neg \varphi$, $E/AF \varphi = E/A[true\ U\ \varphi]$, $E/AG \varphi = \neg A/EF \neg \varphi$
+	
+	\item Formula ktorú nevyjadrím v LTL: $AG(EF(\phi))$
+	
+	\subsection{Real Time Systems}
+	
+	\item Procesor (aktívny), zdroj (pasívny), job (jednotka práce), task (periodicky sa opakujúci job)
+	
+	\item Release time $r$, execution time $e$, relative/absolute deadline $d/D$, period $p$, completion time $C$, response time $C - r$, utilization $\frac{e}{p}$, density tasku $\frac{e}{min(p, D)}$ ($\frac{e}{d - r}$ pre job)
+	
+	\item Hard: verification, Soft: validation
+	
+	\item Tasks: Periodic (hard), Aperiodic (soft), Sporadic (hard)
+	
+	\subsection{Distribuované systémy}
+	
+	\item Komunikujúce procesy prepojené sieťou (Iné modely: MapReduce).
+	
+	\item Sieť je buď synchrónna alebo asynchrónna (všeobecnejšie).
+	
+	\item Komunikácia je drahá — Komunikačná zložitosť (počet, res. veľkosť správ)
+	
+	\item Sieť môže mať rôznu topológiu: ring, star, grid, hypercube, torus, tree, complete graph, unknown
+	
+	\item Zlyhania procesov: nečakaný delay, jednorázové zlyhanie, zlyhanie a zotavenie, bizantínske zlyhanie
+	
+	\item Zlyhania siete: nečakaný delay, packet loss, packet duplication, packet reordering, bizantínske zlyhanie
+
+\end{itemize}
+	
+	
+	
+
+\end{document}
