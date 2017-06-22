@@ -458,7 +458,163 @@
 
 	\subsection{Process Rewrite Systems}
 	
-	\item 
+	\item Term $t ::= \epsilon \mid X \mid t . t \mid t || t$ (X je procesová konštanta)
+	
+	\item Pravidlá tvaru $t \to_a t$ ($a$ je akcia)
+	
+	\item Syntaktická ekvivalencia — nezáleží na zátvorkovaní po sebe idúcich kompozícií, paralelná kompozícia je komutatívna, epsilon môžem pridávať / odoberať kde len chcem.
+	
+	\item Sémantika je LTS (lable = akcie, stavy = termy). Prechod potom vznikajú podľa pravidiel s tým že pravidlo aplikujem buď priamo, alebo na prvý proces kompozície s tým že môžem použiť syntaktickú ekvivalenciu.
+	
+	\item Hierarchia termov:
+	
+	\begin{itemize}
+		\item \textbf{1} bez kompozície
+		\item \textbf{S} len sekvenčná kompozícia
+		\item \textbf{P} len paralelná kompozícia
+		\item \textbf{G} čokoľvek
+	\end{itemize}
+
+	\item Hierarchia (ostrá) na základe termov ktoré môžem používať na ľavej/pravej strane pravidiel.
+	
+	\begin{itemize}
+		\item (1,1) - konečné automaty
+		\item (1, S) - Basic Sequential Processes
+		\item (1, P) - Basic Parallel Processes
+		\item (S, S) - Pushdown jazyky
+		\item (P, P) - Petriho siete
+		\item (1, G) - Process Algebra
+		\item (P, G), (S, G) a (G, G) nemajú mená
+	\end{itemize}
+
+	\subsection{Vybrané verifikačné problémy PRS}
+	
+	\item \textbf{TODO}
+	
+	\item Equivalence checking
+	
+	\item Petriho siete
+	
+	\item LTL pre pushdown systémy
+	
+	\subsection{Partial Order Reduction}
+	
+	\item Stuttering equivalence - vynechám všetky konečné duplicity a dostanem kanonický tvar slova.
+	
+	\item Nezávislosť prechodov: komutativita (a(b(s)) = b(a(s)) a enabledness (ak a,b enabled tak po vykonaní a/b je b/a stále enabled).
+	
+	\item C0 ample je prázdny iff enabled je prázdny
+	
+	\item C1 Ak existuje cesta (v pôvodnom grafe) na ktorej sa vykoná prechod z ample, tak všetky prechody predtým sú nezávislé na ample.
+	
+	\item C2 ak $ample \not= enabled$, tak všetky prechody v ample sú invisible
+	
+	\item C3 Ak existuje cyklus (v redukovanej štruktúre), t.ž. $a \in enabled$ pre nejaký vrchol na cykle, tak $a \in ample$ pre nejaký vrchol na cykle.
+	
+	\item Ako toto počítať? Zosilníme podmienky:
+	
+	\item Model: Paralelné procesy, message queues a shared variables. $pre(a)$ - konfigurácie v ktorých viem povoliť daný prechod, $dep(a)$ - závislé prechody (zdieľajú queue, shared variable alebo sú v tom istom procese), $current$ - prechody ktoré sú povoliteľné v tomto procese zmenou program counteru iného procesu, $T$ - prechody povolené v tomto procese.
+	
+	\item C3 - každý cyklus obsahuje jeden plne rozvitý vrchol (pri výrobe pomocou DFS teda rozvíjam vždy keď prídem späť na zásobník)
+	
+	\item C0 a C2 sú lokálne, nie je problém
+	
+	\item C1 - Testujem ako ample postupne sady povolených prechodov jednotlivých procesov. Musia splňovať že $dep$ neobsahuje prechod iného procesu a že $pre(current - T)$ neobsahuje prechod iného procesu.
+	
+	\subsection{Abstrakcia}
+	
+	\item Zjednodušiť systém pridaním/odobratím chovania.
+	
+	\item Presné abstrakcie: cone of influence (a podobné eliminácie nepotrebného balastu)
+	
+	\item Množina stavov programu sa nahradí abstraktným, jednodušším stavom.
+	
+	\item Buď abstraktné domény (+/0/-, mod, ...) alebo predikátová abstrakcia.
+	
+	\item May abstrakcia: Ak existuje $s \to s'$ tak musí existovať aj $h(s) \to h(s')$
+	
+	\item Must abstrakcia: Pre každé $s \in h^{-1}(a)$ t.ž. $a \to a'$ existuje $s' \in h^{-1}(a')$ t.ž. $s \to s'$ 
+	
+	\item Kartézska abstrakcia: ako predikátová, ale dovolím si extra symbol $*$.
+	
+	\item Ukážka: Guarded command language $(label, guard, update)$. Kontrolujem (v stave $b$) či $isValid(\varphi[b] \implies \neg guard)$, ak ano, prechod je nemožný. Inak testujem $b'_j = (\varphi[b] \implies (guard \implies \varphi_j[update(b)]))$, res. s negáciou keď chcem vedieť či môžem isto prejsť do 1/0. Ak nič z toho neplatí, idem do *.
+	
+	\item CEGAR — na základe protipríkladu chcem rozbiť existujúci abstraktný stav tak, aby som rozlýšil falošnú cestu od skutočnej.
+	
+	\subsection{Abstraktná interpretácia}
+	
+	\item Statická analýza — nezaujíma ma beh programu, ale aké stavy navštívia ktoré statementy.
+	
+	\item Pre každú inštrukciu definujem monotónnu funkciu a napočítavam globálny fixed point (buď najmenší alebo najväčší).
+	
+	\item Môžem použiť widening/narrowing operátory na urýchlenie.
+	
+	\item Príklad: živé premenné. Monotónna funkcia je (živéVNásledníkoch - priraďujem) + používam. (premenná je živa až PO priradení)
+	
+	\subsection{RTS: Plánovanie}
+	
+	\item Clock-driven — ak mám presný timer, môžem si predpočítať presný schedule na hyperperiod a ísť podľa toho. Väčšinou ale chcem schedulovať periodicky po framoch (frame musí byť väčší ako execution time, frame musí deliť hyperperiod a medzi release a deadline je aspoň jeden frame $2f - gcd(f,p) \leq D$)
+	
+	\item Ak sú joby moc veľké, môžem ich rozdeliť na dopredu daných miestach. Aperiodic/sporadic riešim tak, že počítam koľko mi ešte zostáva slack timu vo frame a podľa toho pridávam alebo nie (buď na začiatok alebo na koniec).
+	
+	\item Priority-driven s fixnou prioritou: Rate-monotonic (menšia perióda), Deadline-monotonic (menší deadline)
+	
+	\item Ak sú tasky simply periodic (periódy sú násobky seba), tak RM je optimálny (schedulable utilization 1). Ak $D \leq p$, tak DM je aspoň taký dobrý ako ľubovoľný fixed-priority algoritmus.
+	
+	\item Schedulable utilization pre DM je $n(2^{1/n} - 1)$ (konverguje k $ln(2)$).
+	
+	\item Schedulability test: Critical instant — okamih kedy má job tasku najväčší response time. Ak sú vo fáze, tak je to ten prvý, inak je to vtedy keď sú všetci s väčšou prioritou releasnutý tiež. Time demand analysis — funkcia vyjadruje koľko času potrebujem na vykonanie doteraz releasnutých taskov. Potrebujem aby v nejakom okamihu bola menšia ako uplynulý čas. Schedulability: Time demand analysis v critical instant.
+	
+	\item Sporadic jobs cez servery: Chová sa ako normálny periodický task, ale má okrem periody ešte aj budget. Polling server — obnovuje sa na perióde a ak nemá čo počítať, zahadzuje. Deferrable server — necháva si budget až do limitu, problém je, že môže blokovať na 2x čas. Sporadic server — vždy keď prvý krát začne počítať, nastaví replenishment time na t+p a nemení ho, pokiaľ celý systém nie je idle (ak je idle, nič nekonzumujem a vystúpenie z idle je "reštart systému"). Neblokuje ani zbytočne nezahadzuje.
+	
+	\item Priority-driven s dynamickou prioritou: Earliest deadline first a least slack time
+	
+	\item Schedulable utilization 1.
+	
+	\item Ak $D \geq p$, tak stačí test na utilization, inak treba pozerať na density, čo už je ale len nutná podmienka.
+	
+	\item Sporadic/Aperiodic tasky: periodické tasky mi rozsekajú čas na intervaly a v každom z nich musím otestovať či density aktuálne akceptovaných + periodických taskov je menej ako jedna.
+	
+	\item Resources: Priority inversion. Kritická sekcia má najväčšiu prioritu (blokujem všetkých, ale len na jednu kritickú sekciu). Priority inheritance — dedím prioritu tasku ktorý čaká na môj resource (blokujem len závislých, ale po dobu jednej sekcie od každého resourcu). Priority ceiling — resource má ceiling ako max. prioritu ktorá ho requestuje, systém ma ceiling ako max. blokovaný resource a resource môžem dostať len ak moja priorita je vúčšia ako ceiling systému (predchádza aj deadlockom, iba jedna krit. sekcia) 
+	
+	\subsection{distributed mutual exclusion}
+	
+	\item Väčšinou nejaká forma predávania tokenu (najjednoduššie na ringu).
+	
+	\item Lamport: Každý proces drží frontu requestov s ich kauzálnym timestampom. Keď chcem ísť do krit. sekcie, pošlem všetkým request a čakám na ack. Ak som stále na vrchole fronty, môžem ísť do krit. sekcie. Až skončím, pošlem všetkým release aby vedeli že si ma môžu vyhodiť von.
+	
+	\item Raymond: Kontra na grafe, koreň je tam kde je token. Interne si držím frontu requestov (od seba a susedov) a posielam requesty rodičovy v kostre. (ideálne log(n), ale potrebujem topológiu)
+	
+	\item Maekawa: Kvóra veľkosti sqrt(N) ktorých sa musím pýtať na povolenie. Kvóra majúvždy neprázdny prienik, takže ak dá kvórum green light, znamená to že žiadne iné kvórum nie je blokované.
+	
+	\subsection{Distributed termination detection}
+	
+	\item Dijkstra-Scholten: Request-ack dynamicky tvorený strom. Keď skolabuje, skončil som. (môžem sa niekoľko krát pripojiť/odpojiť ak ma viac krát objavia). Lineárna zložitosť.
+	
+	\item Safra: Token s flagom a message countom. Zložitosť je divná, ale v priemere dobrá.
+	
+	\subsection{Distributed leader election}
+	
+	\item Na cykle: Chang-Roberts — každý pošle token a čaká na jeho návrat a zabíja tokeny menších procesov (kvadratická)
+	\item Na cykle: Paterson — Porovnám sa vpravo a vľavo a z týchto susedov vyhrávam. One direction problém: Jeden smer nevidím. Riešenie — identity kolujú po kruhu, jeden step za kolo. Takže ten kto dostane na konci svojho kola identitu pozná svoju starú a identitu dvoch ľudí za sebou. (nlogn)
+	
+	\item Na stromoch: Inicializácia z listov — čakám kým dostanem ponuku od všetkých až na jedného, potom pošlem ponuku ďalej a čakám na odpoveď.
+	
+	\item Obecná voľba vlnou: V každom vrchole sa iniciuje úplné prehľadávanie grafu. Horšie vlny sa pri strete zrušia. 
+	
+	\item Voľba kostrou (GHS): Každý začína ako nezávislá oblasť. V oblasti sa zvolí najmenšia hrana a so susedom dohodneme kto je väčší. Ak som väčší, čakám (sused ma sám poprosí), ak som menší/rovný, pridám sa k susedovi. 
+	
+	\item Voľba priechodom (KKM): Každý vrchol začne priechod grafu. Postupuje sa v kolách, ako pri Patersonovi. Priechody ktoré stretnú vrchol ktorý už je vo vyššom kole okamžite končia. Priechody ktoré stretnú vrchol ktorý videl horší alebo chasing token čakajú (buď ich niekto doženie, alebo lepší proste vyhrá). Priechody ktoré stretnú vrchol ktorý videl lepší token sa stanú chasing (a pokúsia sa ho dohnať a dostať na ďalší level). Pozn.: V každom leveli je jeden priechod ktorý nikdy nebude chasing, lebo vždy naháňam len lepšie tokeny. Najlepší token keď sa stane waiting, tak ho vždy niekto dobehne, lebo skôr či neskôr mu niekto zkríži cestu (alebo už skrížil predtým).
+	
+	\subsection{ISO/OSI model}
+	
+	\item Physical layer — bit-to-signal transformation, bit-rate control, bit synchronization, multiplexing, circuit switching
+	\item Data Link layer — framing, addressing (MAC), Error control, Flow control, Medium Access Control
+	\item Network layer — packetizing, internetworking (WAN), fragmenting, addressing (IP), Routing
+	\item Transport layer — packetizing, addressing (porty), reliability, congestion/flow control, connection control (TCP vs. UDP)
+	\item Session layer — 
+	\item Presentation layer — transformácie dát
+	\item Application layer — client/server, peer-to-peer, HTTP, FTP, SSH, ... 
 \end{itemize}
 
 \end{document}
