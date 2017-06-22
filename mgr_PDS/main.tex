@@ -337,11 +337,128 @@
 	
 	\item Street — páry množín, akceptujem ak pre všetky páry $inf(w)$ má prienik s prvou implikuje že má prienik s druhou.
 	
+	\subsection{Sémantiky: program}
+	
+	\item Program je reprezentovaný syntaktickým stromom (atomy majú doménu a môžu mať potenciálne svoj vlastný AST, ale to ma až tak nezaujíma)
+	
+	\item Domény: $Var$, $Bool$ a $Num$ 
+	
+	\item Aritmetické výrazy $a ::= Num \mid Var \mid a + a \mid a - a \mid a \cdot a$
+	
+	\item Booleovské výrazy $b ::= Bool \mid a = a \mid a \leq a \mid \neg b \mid b \land b \mid b \lor b$
+	
+	\item Príkazy: $c ::= skip \mid c;c \mid if\ b\ then\ c\ else\ c \mid while\ b\ do\ c$
+	
 	\subsection{Operačná sémantika}
+	
+	\item Pomocou odvodzovacieho systému popisuje ako program počíta.
+	
+	\item BigStep: Konfigurácia je valuácia premenných. Prechody sú označené príkazmi a existujú ak sú dokázateľné.
+	
+	\item Tvar odvodzovacieho systému zodpovedá vykonaniu celého príkazy (artimetika sa vyhodnocuje na čísla, Pravdivosť na 1/0, while sa vyhodnotí rekurzívne)
+	
+	\item SmallStep: Konfigurácia je zostávajúci program + valuácia premenných. Prechody nie sú označené a reprezentujú jednotlivé inštrukcie programu.
+	
+	\item Tvar odvodzovacieho systému zodpovedá vykonaniu jednej inštrukcie (idem z ľava do prava a redukujem list AST stromu, while sa vyhodnotí na jeden unroll, vyhodnotený príkaz sa zmení na skip, kompozíciu skipo + niečo viem zameniť za niečo)
+	
+	\item While môže mať nekonečný dôkaz ak cyklus nekončí (prechod neexistuje)
 	
 	\subsection{Denotačná sémantika}
 	
+	\item Pomocou funkcie popisujem čo program počíta.
+	
+	\item Funkcia mi pre program vracia funkciu transformácie stavu (res. výpočtu hodnoty na základe stavu pre artimetiku a bool).
+	
+	\item Funkcia je definovaná intuitívne, jediný problém je s while. $\mathcal{C}[while]$ je least fixed point funkcie $\Gamma(f) = \{ (a, a) \mid \mathcal{B}(a) = \bot \} \cup \{ (a,b) \mid \mathcal{B}(a) = \top \land b = (f \circ \mathcal{C}[c])(a) \}$ (funkcia je monotónna a zachováva supréma, teda je Scott-continuous a teda môžem použiť Kleeneho).
+	
 	\subsection{Axiomatická sémantika (Hoareho logika)}
+	
+	\item Nehovorí nič o ukončení programu! Len parciálna korektnosť.
+	
+	\item Hoareho trojica $A \mid c \mid B$ — Ak platí $A$ a $c$ skončí, bude platiť $B$.
+	
+	\item Hoareho odvodzovacý systém:
+	
+	\begin{itemize}
+		\item Axióm: $A \mid skip \mid A$
+		\item Axióm: $A[X/t] \mid X = t \mid A$
+		\item Rule: $A \mid a;b \mid B$ ak $A \mid a \mid C$ a $C \mid b \mid B$
+		\item Rule: $A \mid if\ b\ then\ c\ else\ d \mid B$ ak $(A \land b) \mid c \mid B$ a $(A \land \neg b) \mid d \mid B$
+		\item Rule: $A \mid while\ b\ do\ c \mid (A \land \neg b)$ ak $(A \land b) \mid c \mid A$ ($A$ je invariant)
+		\item Rule: $A \mid c \mid B$ ak $\models (A \implies A')$, $\models (B' \implies B)$ a $A' \mid c \mid B'$
+	\end{itemize}
+
+	\item Systém je korektný a úplný (vzhľadom na partial correctness)
+	
+	\item Úplnosť vyplýva z existencie weakest precondition.
+	
+	\item Weakest precondition: Pre statement a postcondition určí najslabšiu vstupnú podmienku. Teda $\vdash WP \mid c \mid B$ (Z WP viem dokázať B po c)
+	
+	\item Weakest precondition vždy existuje! (pri dôkaze while používam Godelov predikát)
+	
+	\item Konštrukcia WP:
+	
+	\begin{itemize}
+		\item WP pre $skip, B$ je $B$
+		\item WP pre $X = a, B$ je $B[X/a]$
+		\item WP pre $a;b, B$ je WP pre $a$ z WP pre $b, B$
+		\item WP pre $if, B$ je $(b \implies WP(c, B)) \land (\neg b \implies WP(d, B))$
+		\item WP pre $while, B$ je $(b \land I) \implies WP(c, I)$ a $(\neg b \land I) \implies B$ (pozor, tie dve formule chcem kvantifikovať oddelene)
+	\end{itemize}
+
+	\subsection{LTL model checking}
+	
+	\item Kripkeho štruktúra na Buchi automat (všetky stavy sú akceptujúce)
+	
+	\item Vlastnosť na Buchi automat (exponenciálnej veľkosti ak mám smolu)
+	
+	\item Na to aby som ukázal $M \models \varphi$, potrebujem $L(M) \subseteq L(\varphi)$, to ale platí iff $L(M) \cap co-L(\varphi) = \emptyset$.
+	
+	\item Zostrojím teda kompozíciu automatov pre $M$ a pre $\varphi$ a v nej hľadám akceptujúcy cyklus.
+	
+	\item NestedDFS: Dve (súbežné) DFS — jedno mi určuje postorder akceptujúcich stavov, druhé mi z každého akceptujúceho stavu hľadá cyklus. Celková zložitosť je lineárna.
+	
+	\item Sú triedy vlastností ktoré sa overujú jednoduššie: safety — automat je terminálny (cyklus je selfloop), weak LTL (response vlasnosti) (komponenty sú buď akceptujúce alebo nie, nie sú mixed), stačí mi DFS.
+	
+	\subsection{Symbolický model checking}
+	
+	\item Stavy sú bitvektory. Mnoéžiny stavov sú množiny bitvektorov. Teda množina stavov je booleovská funkcia.
+	
+	\item OBDD — ordered binary decision diagram — mám usporiadanie na premenných a zlúčil som všetky duplicitné a redundantné vrcholy.
+	
+	\item Minimalizácia: Zlep listy, odstráň vrcholy ktoré majú identický low/high link, spoj dvojice vrcholov ktoré majú rovnaký low/high link (pre rovnakú premennú)
+	
+	\item Aplikácia funkcie — Shannonova expanzia $F(x, ...) = (x \land F_{x \to 1}) \lor (\neg x \land F_{x \to 0})$ — Postupujem rekurzívne od vrchu BDD až po listy. Keď prídem do listu, aplikujem funkciu, inak len traverzujem graf bližšie k listom (teda simulujem prácu s BDT pomocou grafu BDD). Výsledky potom rekurzívne zliepam a minimalizujem.
+	
+	\item Model checking: Iniciálne stavy sa kódujú ako BDD. Prechodová funkcia sa kóduje ako BDD (dvojnásobná veľkosť, doslova kódujem reláciu prechodu). Jeden krok sa kóduje ako konjunkcia s prechodovou funkciou a potom zahodenie a prvej polovice premenných.
+	
+	\item Bounded model checking: Kódovanie do SMT formule s unrollingom dĺžky $k$. Nie všetko sa dá takto dokázať ($GF a$).
+	
+	\subsection{Prevod LTL na Buchi}
+	
+	\item Formula obsahuje len X a U, R a negáciu len na literáloch (k tomu potrebujem R)
+	
+	\item Algoritmus najskôr vyrobí graf automatu, z neho urobí rozšírený automat a ten spojí na obecného Buchiho.
+	
+	\item Výroba grafu automatu:
+	
+	\begin{itemize}
+		\item Každý stav si pamätá čo má ($Now$), čo chce ($New$) a čo potrebuje ($Next$).
+		\item Začínam s jedným stavom ktorý má v seve ako new celú formulu.
+		\item Postupne unrollujem podľa pravidla: Ak mám niečo v new, zamením tento stav za (jeden alebo viac) nových. Ak v new nič nie je, vyrobím nového následníka ktorý bude mať v new môj next.
+		\item Ak vyrobím duplicitný stav, tak ho len mergnem.
+		\item Unrolling propozície len overí či už náhodou neplatí jej negácia (ak ano, uzol sa maže a končím)
+		\item Unrolling and/or je buď na dva stavy kde je ľavá/pravá ako new, alebo na jeden kde sú obidve ako new.
+		\item Unrolling Nextu je že sa podformula pridá do next.
+		\item Unrolling Untilu je na dva stavy, jeden kde je reach v now a jeden kde je path v now a until v next.
+		\item Unrolling Release je na dva stavy, jeden kde sú obidve v now a jeden kde je path v now a release v next.
+	\end{itemize}
+
+	\item Výroba rozšíreného automatu: Prechody sú pod propozíciami ktoré platia v stavoch kam vedú. Pre každý until akceptujem množinou stavov kde v now buď je reach, alebo v now nie je celý until. (Teda ak raz vbehnem do miesta kde má platiť until, tak musím prísť až do reachu)
+
+	\subsection{Process Rewrite Systems}
+	
+	\item 
 \end{itemize}
 
 \end{document}
