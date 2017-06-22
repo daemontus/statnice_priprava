@@ -222,9 +222,126 @@
 	
 	\item Zlyhania siete: nečakaný delay, packet loss, packet duplication, packet reordering, bizantínske zlyhanie
 
+	\section{Advanced pojmy}
+	
+	\subsection{Grafové problémy}
+	
+	\item Nezávislá množina: žiadne dva vrcholy v množine nie sú spojené hranou.
+	
+	\item Vrcholové pokrytie: každá hrana končí vo vrchole ktorý je v pokrytí.
+	
+	\item Dominujúca množina: každý vrchol má suseda v množine.
+	
+	\item Ofarbenie grafu: Každý vrchol má medzi susedmi unikátnu farbu.
+	
+	\item Hamiltonovský cyklus/cesta.
+	
+	\item Reprezentácia grafov: Matica susednosti, Incidenčná matica, zoznam následníkov (hrán), implicitne.
+	 
+	 \subsection{Logika}
+	 
+	 \item Úplný systém logických spojok: dá sa pomocou neho vyjadriť ľubovoľná logická funkcia. (Dôkaz pre ano/or/not - ľubovoľnú funkciu zákódujem do veľmi hnusného DNF)
+	 
+	 \item Shefferovská funkcia: úplná sama o sebe (zhruba 1/3 funkcií je shefferovská)
+	 
+	 \item Lukasiewicz (odvodzovacý systém pre výrokovú logiku):
+	 
+	 \begin{itemize}
+		\item A1: $A \to (B \to A)$
+		\item A2: $(A \to (B \to C)) \to ((A \to B) \to (A \to C))$
+		\item A3: $(\neg A \to \neg B ) \to (B \to A)$
+		\item MP (modus ponens): Z $A \to B$ a $A$ vyvoď $B$
+	 \end{itemize}
+
+	\item First order logic (odvodzovacý systém):
+	
+	\begin{itemize}
+		\item A1-A3 + MP
+		\item $\forall x . \varphi \to \varphi[x/t]$ (špecifikácia)
+		\item $\forall x. (A \to B) \to (A \to \forall x. B)$ (ak $x$ nemá voľný výskyt v $A$, distribúcia)
+		\item Generalizácia: Z $A$ odvoď $\forall x . A$
+		\item Rovnosť: $x = x$, ak $x = y$, tak $f(x) = f(y)$ a ak $x = y \land P(x)$, tak $P(y)$.
+	\end{itemize}
+
+	\item Veta o dedukcií: Ak $T \vdash (A \to B)$ tak $T \cup A \vdash B$.
+	
+	\item Veta o kompaktnosti: Nekonečná teória má model práve keď každá konečná podteória má model.
+	
+	\item Löwenheim-Skolem: Ak pre ľubovolné $n$ existuje model s nosičom mohutnosti $n$, tak existuje aj nekonečný model.
+	
+	\subsection{Gödel}
+	
+	\item Peanova aritmetika — axiomy aritmetiky celých čísel v predikátovej logike.
+	
+	\item Gödelov predikát — $\beta(a, b, i, x) \iff x = a \mod (1 + b (1 + i))$ — kóduje unikátnu (konečnú) postupnosť čísel.
+	
+	\item 1. Veta o neúplnosti: Existuje formula pravdivá v $\mathcal{N}$ ktorá nie je dokázateľná v Peanovej aritmetike. 
+	
+	\item Proof sketch: Dôkazy sa dajú kódovať ako čísla, teda môžem mať predikát $proof(x, y)$ ak $x$ je dôkaz $y$, z tohoto dostanem predikát pre "$x$ je dokázateľné". Na základe toho potom skonštruujem formulu typu $\varphi = \neg provable(\varphi)$. Formula sa nazýva Gödel sentence.
+	
+	\item 2. Veta o neúplnosti: Formula $consis = \neg provable(a \land \neg a)$ (ekvivalentné dôkazu bezspornosti) nie je dokázateľná v Peanovej aritmetike pre ľubovoľné $a$ (ani iných podobne silných systémoch).
+	
+	\item Proof sketch: Použijem Gödel sentence $g$ ako $a$ a ukážem že ak $\vdash g$, tak aj $\vdash provable(g)$ a súčasne $\vdash \neg provable(g)$ (toto sa dá dokázať v PA, keďže $g$ je nedokázateľná). Potom ale z $\vdash provable(g)$ plynie $\neg consis$.
+	
+	\subsection{Logiky nad slovami}
+	
+	\item Predikátová logika — kvantifikujem nad pozíciami v slove a mám dva predikáty $Q_a(x)$ (na pozícií $x$ je znak $a$) a $x < y$.
+	
+	\item Pomerne slabá logika, nevie vyjadriť ani jazyk slov párnej dĺžky.
+	
+	\item Second order logic — pridávam kvantifikáciu nad množinami pozícií a predikát $x \in X$.
+	
+	\item Populárne predikáty: $next$, $last$, $first$... Množiny potom väčšinou definujem induktívne (existuje množina taká že jej prvok je prvý v slove a všetky jej prvky sú o dva za iným prvkom)
+	
+	\item FA to MSOL:
+	
+	\begin{itemize}
+		\item Definujem si "partície" do ktorých sa mi rozpadnú pozície slova podľa toho či skončím v tom stave keď prečítam danú pozíciu.
+
+		\item Inicializácia: Po prečítaní prvého znaku skončím v množine danej týmto znakom.
+		\item Množiny pozícií sú dizjunktné a každá pozícia patrí do jednej množiny.
+		\item Pozície zachovávajú prechodovú funkciu.
+	
+		\item Potom už stačí napísať že posledná pozícia leží v množine ktorá odpovedá akceptujúcemu stavu.
+	\end{itemize}
+
+	\item MSOL to FA:
+	
+	\begin{itemize}
+		\item Postupujem induktívne po formuli. Konštruujem automat ktorý akceptuje slová abecedy $\Sigma \times [0,1]^n$ kde $n$ je počet voľných premenných a hovorí či je pozícia v danej premennej alebo nie (FO premenné budú mať v celom slove len jednu jednotku).
+		
+		\item Preklad predikátov je triviálny (proste sa presuniem keď na razím na vhodné kombo znak-príslušnosť)
+		
+		\item Negácia — nemôžem robiť hlúpy komplement, musím ešte zabezpečiť že nebudem akceptovať malformed slová (FO premenné s viac jednotkami). Viem ale urobiť jazyk validných slov, takže urobím komplement a sprienikujem s týmto jazykom.
+		
+		\item Dizjunkcia — rozšírim abecedy jazykov na rovnakú doménu (jeden prechod zdvojím aby šiel bez ohľadu na novú premennú). Potom môžem robiť union.
+		
+		\item Kvantifikácia — proste useknem celú pozíciu premennej z abecedy.
+		
+		\item Výsledný automat môže byť veľký — "veža exponentov" vhľadom k počtu negácií.		
+	\end{itemize}
+
+	\subsection{Omega automaty}
+	
+	\item Uzavretosť na zjednotenie (blbý union), zreťazenie regulárny+omega, res. regulárny$^\omega$
+	
+	\item Prienik: Konštrukcia ako pre prevod zobecneného automatu: Vytvorím vrstvy pre každý prienikovaný automat a behám medzi vrstvami pri prechode cez koncový stav.
+	
+	\item Komplement: Ano, ale dôkaz je fuj \textbf{??????} 
+	
+	\item Neprázdnosť jazyka je NLOG úplná (Reachability), Ne-univerzálnosť je PSPACE.
+	
+	\item Muller — množiny stavov, akceptujem ak $inf(w)$ presne matchuje jednu z množín.
+	
+	\item Rabin — páry množín, akcetujem ak existujé pár t.ž. $inf(w)$ má prienik s prvou ale nie s druhou.
+	
+	\item Street — páry množín, akceptujem ak pre všetky páry $inf(w)$ má prienik s prvou implikuje že má prienik s druhou.
+	
+	\subsection{Operačná sémantika}
+	
+	\subsection{Denotačná sémantika}
+	
+	\subsection{Axiomatická sémantika (Hoareho logika)}
 \end{itemize}
-	
-	
-	
 
 \end{document}
